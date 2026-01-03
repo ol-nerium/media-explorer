@@ -7,7 +7,51 @@
     <title>media-explorer</title>
   </head>
   <body>
-    <div id="app"></div>
+    <header class="header">
+      <div class="header-nav">
+        <a class="logo">logo</a>
+        <nav class="navigation">
+          <ul class="navigation-list">
+            <li class="navigation-list__item">
+              <button type="button" class="navBtn">Home</button>
+            </li>
+            <li class="navigation-list__item">
+              <button type="button" class="navBtn">User list</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <form action="" class="searchForm">
+        <label for="searchMovieField">Search</label>
+        <input
+          type="text"
+          id="searchMovieField"
+          placeholder="search movie by name"
+        />
+        <button type="button" class="searchBtn">Search</button>
+      </form>
+    </header>
+    <main>
+      <ul class="filterButtons">
+        <li>
+          <button type="button" data-filter="nowPlaying">Now playing</button>
+        </li>
+        <li><button type="button" data-filter="popular">Popular</button></li>
+        <li><button type="button" data-filter="topRated">Top rated</button></li>
+        <li><button type="button" data-filter="upcoming">Upcoming</button></li>
+        <li>
+          <button type="button" data-filter="trendDay">Trending today</button>
+        </li>
+        <li>
+          <button type="button" data-filter="trendWeek">
+            Trending this week
+          </button>
+        </li>
+      </ul>
+      <div id="gallery"></div>
+    </main>
+    <footer></footer>
 
     <script type="module" src="/src/main.js"></script>
   </body>

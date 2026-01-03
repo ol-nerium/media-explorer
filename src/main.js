@@ -1,3 +1,4 @@
+import { galleryMarkup } from "./js/galleryCreate";
 import {
   getMoviesByFilters,
   getGenresList,
@@ -12,37 +13,33 @@ import {
   getKeywordIdByTitle,
   getMovieByTitle,
 } from "./js/utils/apiService";
+import { getFilterButtons } from "./js/utils/refs";
 import "./style.css";
 
-document.querySelector("#app").innerHTML = `
-  <div>
-   
-    <h1>Hello Vite!</h1>
+// document.querySelector("#app").innerHTML = `
+//   <div>
 
-    <p class="read-the-docs">
-      lorem ipso eto vsyo ipso
-    </p>
+//     <h1>Hello Vite!</h1>
 
-<button class="getMoviesByFilters">getMoviesByFilters</button>
-<button class="getGenresList">getGenresList</button>
-<button class="getNowPlayingMoviesList">getNowPlayingMoviesList</button>
-<button class="getPopularMoviesList">getPopularMoviesList</button>
-<button class="getTopRatedMoviesList">getTopRatedMoviesList</button>
-<button class="getUpcomingMoviesList">getUpcomingMoviesList</button>
-<button class="getTMDBTrendingByDayMoviesList">getTMDBTrendingByDayMoviesList</button>
-<button class="getTMDBTrendingByWeekMoviesList">getTMDBTrendingByWeekMoviesList</button>
-<button class="getKeyWordTitleById">getKeyWordTitleById</button>
-<button class="getMovieById">getMovieById</button>
-<button class="getKeywordIdByTitle">getKeywordIdByTitle</button>
-<button class="getMovieByTitle">getMovieByTitle</button>
+//     <p class="read-the-docs">
+//       lorem ipso eto vsyo ipso ti obmanyuesh
+//     </p>
 
-  </div>
-`;
+// <button class="getMoviesByFilters">getMoviesByFilters</button>
+// <button class="getGenresList">getGenresList</button>
+// <button class="getNowPlayingMoviesList">getNowPlayingMoviesList</button>
+// <button class="getPopularMoviesList">getPopularMoviesList</button>
+// <button class="getTopRatedMoviesList">getTopRatedMoviesList</button>
+// <button class="getUpcomingMoviesList">getUpcomingMoviesList</button>
+// <button class="getTMDBTrendingByDayMoviesList">getTMDBTrendingByDayMoviesList</button>
+// <button class="getTMDBTrendingByWeekMoviesList">getTMDBTrendingByWeekMoviesList</button>
+// <button class="getKeyWordTitleById">getKeyWordTitleById</button>
+// <button class="getMovieById">getMovieById</button>
+// <button class="getKeywordIdByTitle">getKeywordIdByTitle</button>
+// <button class="getMovieByTitle">getMovieByTitle</button>
 
-function onBtnClick(e) {
-  console.log(e.target);
-  fetchMovie();
-}
+//   </div>
+// `;
 
 const buttons = {
   getMoviesByFilters: document.querySelector(".getMoviesByFilters"),
@@ -63,52 +60,55 @@ const buttons = {
   getMovieByTitle: document.querySelector(".getMovieByTitle"),
 };
 
-buttons.getMoviesByFilters.addEventListener("click", (e) => {
-  getMoviesByFilters().then((res) => console.log(res));
+const { nowPlaying, popular, topRated, upcoming, trendDay, trendWeek } =
+  getFilterButtons();
+
+nowPlaying.addEventListener("click", (e) => {
+  getNowPlayingMoviesList(1).then((res) => galleryMarkup(res.results));
 });
 
-buttons.getGenresList.addEventListener("click", (e) => {
-  getGenresList().then((res) => console.log(res));
+popular.addEventListener("click", (e) => {
+  getPopularMoviesList().then((res) => console.log(res.results));
 });
 
-buttons.getNowPlayingMoviesList.addEventListener("click", (e) => {
-  getNowPlayingMoviesList().then((res) => console.log(res));
+topRated.addEventListener("click", (e) => {
+  getTopRatedMoviesList().then((res) => console.log(res.results));
 });
 
-buttons.getPopularMoviesList.addEventListener("click", (e) => {
-  getPopularMoviesList().then((res) => console.log(res));
+upcoming.addEventListener("click", (e) => {
+  getUpcomingMoviesList().then((res) => console.log(res.results));
 });
 
-buttons.getTopRatedMoviesList.addEventListener("click", (e) => {
-  getTopRatedMoviesList().then((res) => console.log(res));
+trendDay.addEventListener("click", (e) => {
+  getTMDBTrendingByDayMoviesList().then((res) => console.log(res.results));
 });
 
-buttons.getUpcomingMoviesList.addEventListener("click", (e) => {
-  getUpcomingMoviesList().then((res) => console.log(res));
+trendWeek.addEventListener("click", (e) => {
+  getTMDBTrendingByWeekMoviesList().then((res) => console.log(res.results));
 });
 
-buttons.getTMDBTrendingByDayMoviesList.addEventListener("click", (e) => {
-  getTMDBTrendingByDayMoviesList().then((res) => console.log(res));
-});
+// buttons.getMoviesByFilters.addEventListener("click", (e) => {
+//   getMoviesByFilters().then((res) => console.log(res));
+// });
 
-buttons.getTMDBTrendingByWeekMoviesList.addEventListener("click", (e) => {
-  getTMDBTrendingByWeekMoviesList().then((res) => console.log(res));
-});
+// buttons.getGenresList.addEventListener("click", (e) => {
+//   getGenresList().then((res) => console.log(res));
+// });
 
-buttons.getKeyWordTitleById.addEventListener("click", (e) => {
-  getKeyWordTitleById().then((res) => console.log(res));
-});
+// buttons.getKeyWordTitleById.addEventListener("click", (e) => {
+//   getKeyWordTitleById().then((res) => console.log(res));
+// });
 
-buttons.getMovieById.addEventListener("click", (e) => {
-  getMovieById().then((res) => console.log(res));
-});
+// buttons.getMovieById.addEventListener("click", (e) => {
+//   getMovieById().then((res) => console.log(res));
+// });
 
-buttons.getKeywordIdByTitle.addEventListener("click", (e) => {
-  getKeywordIdByTitle().then((res) => console.log(res));
-});
+// buttons.getKeywordIdByTitle.addEventListener("click", (e) => {
+//   getKeywordIdByTitle().then((res) => console.log(res));
+// });
 
-buttons.getMovieByTitle.addEventListener("click", (e) => {
-  getMovieByTitle("tron").then((res) => console.log(res));
-});
+// buttons.getMovieByTitle.addEventListener("click", (e) => {
+//   getMovieByTitle("tron").then((res) => console.log(res));
+// });
 
 // getMoviesByFilters getKeyWordTitleById getMovieById getKeywordIdByTitle getMovieByTitle !! check

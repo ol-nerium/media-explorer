@@ -68,7 +68,8 @@ function getGenresList() {
 }
 
 // MOVIE LISTS:
-function getNowPlayingMoviesList(lang = "en-US", page = 1, region) {
+function getNowPlayingMoviesList(page = 1) {
+  // page, region, lang = "en-US"
   return axios
     .get("movie/now_playing")
     .then((res) => res.data)

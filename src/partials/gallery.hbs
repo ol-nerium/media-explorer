@@ -1,0 +1,23 @@
+<ul>
+  {{#each movies}}
+    <li>
+      <a href="DO SOMETHING HERE AAAA" key={{this.id}}>
+        <h3>{{this.title}} or {{this.original_title}}</h3>
+        <div class="img-wrap">
+          <img
+            src="https://image.tmdb.org/t/p{{this.backdrop_path}}"
+            alt="FIX IT! {{this.title}} "
+          />
+        </div>
+        {{!-- {{#with genres}} --}}
+        <ul>
+          {{#each this.genre_ids}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+        {{!-- {{}} --}}
+      </a>
+    </li>
+  {{/each}}
+
+</ul>
