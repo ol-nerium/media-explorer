@@ -1,22 +1,21 @@
-<ul>
+<ul class="gallery">
   {{#each movies}}
-    <li>
-      <a href="DO SOMETHING HERE AAAA" key={{this.id}}>
-        <h3>{{this.title}} or {{this.original_title}}</h3>
-        <div class="img-wrap">
+    <li class="gallery-item" data-id={{this.id}}>
+      <h3 class="gallery-title">{{this.title}} or {{this.original_title}}</h3>
+      <div class="img-wrap">
+        {{#if this.poster_path}}
           <img
-            src="https://image.tmdb.org/t/p{{this.backdrop_path}}"
-            alt="FIX IT! {{this.title}} "
+            src="https://image.tmdb.org/t/p/w300{{this.poster_path}}"
+            alt="{{this.title}} "
           />
-        </div>
-        {{!-- {{#with genres}} --}}
-        <ul>
-          {{#each this.genre_ids}}
-            <li>{{this}}</li>
-          {{/each}}
-        </ul>
-        {{!-- {{}} --}}
-      </a>
+        {{else}}
+          <img src="src/assets//fallbackForPreview.png" alt="{{this.title}} " />
+        {{/if}}
+      </div>
+
+      <ul class="gallery-item_genres">
+        {{{genresGenerator this.genre_ids}}}
+      </ul>
     </li>
   {{/each}}
 

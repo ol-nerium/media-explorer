@@ -68,33 +68,36 @@ function getGenresList() {
 }
 
 // MOVIE LISTS:
-function getNowPlayingMoviesList(page = 1) {
+function getNowPlayingMoviesList(page = 1, _) {
   // page, region, lang = "en-US"
   return axios
-    .get("movie/now_playing")
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .get(`movie/now_playing?language=en-US&page=${page}`)
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
   // Get a list of movies that are currently in theatres.
 }
-function getPopularMoviesList(lang = "en-US", page = 1, region) {
+function getPopularMoviesList(page = 1, _) {
+  // lang = "en-US",  region
   return axios
-    .get("movie/popular")
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .get(`movie/popular?language=en-US&page=${page}`)
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
   // Get a list of movies ordered by popularity.
 }
-function getTopRatedMoviesList(lang = "en-US", page = 1, region) {
+function getTopRatedMoviesList(page = 1, _) {
+  // (lang = "en-US"), region;
   return axios
-    .get("movie/top_rated")
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .get(`movie/top_rated?language=en-US&page=${page}`)
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
   // Get a list of movies ordered by rating.
 }
-function getUpcomingMoviesList(lang = "en-US", page = 1, region) {
+function getUpcomingMoviesList(page = 1, _) {
+  // (lang = "en-US"), region;
   return axios
-    .get("movie/upcoming")
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .get(`movie/upcoming?language=en-US&page=${page}`)
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
   // Get a list of movies that are being released soon.
 }
 
@@ -139,7 +142,7 @@ function getKeywordIdByTitle(query, page) {
     .catch((e) => console.log(e));
 }
 
-function getMovieByTitle(query, page = 1) {
+function getMovieByTitle(page = 1, query) {
   // query required
   // include_adult boolean
   // language  Defaults to en-US
@@ -151,8 +154,8 @@ function getMovieByTitle(query, page = 1) {
     .get(
       `search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`
     )
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
 }
 
 // Get the rating, watchlist and favourite status of an account. https://api.themoviedb.org/3/movie/{movie_id}/account_states
