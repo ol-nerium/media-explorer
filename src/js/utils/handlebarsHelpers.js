@@ -1,4 +1,6 @@
 import Handlebars from "handlebars";
+import { format } from "date-fns";
+
 import { state } from "../../main";
 
 Handlebars.registerHelper("genresGenerator", function (genreIds) {
@@ -7,4 +9,9 @@ Handlebars.registerHelper("genresGenerator", function (genreIds) {
   );
   if (genres.length === 0) return "<li>No genres</li>";
   return genres.map((item) => `<li>${item.name}</li>`).join("");
+});
+
+Handlebars.registerHelper("formatDate", function (date) {
+  const newDate = format(date, "MM/yyyy");
+  return `released ${newDate}`;
 });

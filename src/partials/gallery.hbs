@@ -2,6 +2,9 @@
   {{#each movies}}
     <li class="gallery-item" data-id={{this.id}}>
       <h3 class="gallery-title">{{this.title}} or {{this.original_title}}</h3>
+      {{#if this.release_date}}
+        <p class="gallery-year">{{formatDate this.release_date}}</p>
+      {{/if}}
       <div class="img-wrap">
         {{#if this.poster_path}}
           <img

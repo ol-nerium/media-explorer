@@ -1,0 +1,3 @@
+function getCurrentScrollPosition() {}
+
+function comparePositionForFetch() {}

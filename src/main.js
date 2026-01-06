@@ -1,3 +1,5 @@
+import debounce from "debounce";
+
 import { galleryMarkup } from "./js/galleryCreate";
 
 import {
@@ -18,6 +20,8 @@ const { nowPlaying, popular, topRated, upcoming, trendDay, trendWeek } =
   filterButtonsList;
 const { homeBtn, libraryBtn } = headerButtonsList;
 
+const DEBOUNCE_DELAY = 300;
+
 const state = new State();
 state.updateGenresList();
 
@@ -37,7 +41,7 @@ function setState({
   state.setSearchQuery(query);
 }
 
-function onFilterClick(e) {
+const onFilterClick = (e) => {
   const filter = e.target.dataset.filter;
   const bindedFn = filterButtonsList[filter].bindedFn;
   state.setIsloading(true);
@@ -55,10 +59,9 @@ function onFilterClick(e) {
     .finally(() => {
       state.setIsIdle();
     });
-}
+};
 
-function onSearchMovies(e) {
-  e.preventDefault();
+const onSearchMovies = (e) => {
   const bindedFn = searchForm.bindedFn;
   const query = e.target.elements.searchMovieField.value;
   if (query.trim() === "") {
@@ -67,7 +70,6 @@ function onSearchMovies(e) {
   }
 
   state.setIsloading(true);
-
   bindedFn(1, query)
     .then((res) => {
       setState({ ...res, query });
@@ -81,22 +83,31 @@ function onSearchMovies(e) {
     .finally(() => {
       state.setIsIdle();
     });
-}
+};
 
-function onHeaderBtnClick(e) {
+const onHeaderBtnClick = (e) => {
   const target = e.target.dataset.type;
   const bindedFn = headerButtonsList[target].bindedFn;
   bindedFn("click to change page");
-}
+};
 
-nowPlaying.element.addEventListener("click", onFilterClick);
-popular.element.addEventListener("click", onFilterClick);
-topRated.element.addEventListener("click", onFilterClick);
-upcoming.element.addEventListener("click", onFilterClick);
+const debouncedOnFilterClick = debounce(onFilterClick, DEBOUNCE_DELAY);
+const debouncedOnHeaderBtnClick = debounce(onHeaderBtnClick, DEBOUNCE_DELAY);
+const debouncedOnSearchMovies = debounce(onSearchMovies, 300);
 
-homeBtn.element.addEventListener("click", onHeaderBtnClick);
-libraryBtn.element.addEventListener("click", onHeaderBtnClick);
+const onDebouncedFormSubmit = (e) => {
+  e.preventDefault();
+  debouncedOnSearchMovies(e);
+};
 
-searchForm.element.addEventListener("submit", onSearchMovies);
+nowPlaying.element.addEventListener("click", debouncedOnFilterClick);
+popular.element.addEventListener("click", debouncedOnFilterClick);
+topRated.element.addEventListener("click", debouncedOnFilterClick);
+upcoming.element.addEventListener("click", debouncedOnFilterClick);
+
+homeBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
+libraryBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
+
+searchForm.element.addEventListener("submit", onDebouncedFormSubmit);
 
 export { state };

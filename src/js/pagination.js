@@ -37,15 +37,28 @@ function createPaginationMarkup() {
     })
     .join("");
   const arrowMarkupObj = {
-    rightArrow: '<button class="RightArrow" data-control="right">-></button>',
+    rightArrow: '<button class="rightArrow" data-control="right">-></button>',
     leftArrow: '<button class="leftArrow" data-control="left"><-</button>',
   };
 
   resMarkup = arrowMarkupObj.leftArrow + resMarkup + arrowMarkupObj.rightArrow;
 
   paginationRoot.innerHTML = resMarkup;
+  paginationClassWork();
+}
+
+function paginationClassWork() {
   const currentPageElem = document.querySelector(`[data-page='${state.page}']`);
+
   currentPageElem.classList.add("active");
+  if (
+    Number(currentPageElem.dataset.page) === Number(state.total_pages) ||
+    Number(currentPageElem.dataset.page) === 500
+  )
+    document.querySelector(".rightArrow").classList.add("inactive");
+
+  if (Number(currentPageElem.dataset.page) === 1)
+    document.querySelector(".leftArrow").classList.add("inactive");
 }
 
 paginationRoot.addEventListener("click", (e) => {
