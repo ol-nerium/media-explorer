@@ -1,7 +1,11 @@
 <ul class="gallery">
   {{#each movies}}
     <li class="gallery-item" data-id={{this.id}}>
-      <h3 class="gallery-title">{{this.title}} or {{this.original_title}}</h3>
+      {{#if this.title}}
+        <h3 class="gallery-title">{{this.title}} </h3>
+      {{else}}
+        <h3 class="gallery-title"> {{this.original_title}}</h3>
+      {{/if}}
       {{#if this.release_date}}
         <p class="gallery-year">{{formatDate this.release_date}}</p>
       {{/if}}

@@ -11,6 +11,7 @@ import "./style.css";
 import "./js/utils/handlebarsHelpers";
 
 import { State } from "./js/appState";
+import { documentWasTotallyScrolled, scrollUp } from "./js/infiniteScroll";
 
 const filterButtonsList = getFilterButtons();
 const headerButtonsList = getHeaderNavButtons();
@@ -109,5 +110,16 @@ homeBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
 libraryBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
 
 searchForm.element.addEventListener("submit", onDebouncedFormSubmit);
+
+document.querySelector(".test-btn").addEventListener("click", scrollUp);
+
+// getCurrentScrollPosition();
+
+const debouncedDocumentWasTotallyScrolled = debounce(
+  documentWasTotallyScrolled,
+  500
+);
+
+window.addEventListener("scroll", debouncedDocumentWasTotallyScrolled);
 
 export { state };
