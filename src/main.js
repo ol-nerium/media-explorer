@@ -11,7 +11,7 @@ import "./style.css";
 import "./js/utils/handlebarsHelpers";
 
 import { State } from "./js/appState";
-import { documentWasTotallyScrolled, scrollUp } from "./js/infiniteScroll";
+import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
 
 const filterButtonsList = getFilterButtons();
 const headerButtonsList = getHeaderNavButtons();
@@ -115,10 +115,11 @@ document.querySelector(".test-btn").addEventListener("click", scrollUp);
 
 // getCurrentScrollPosition();
 
-const debouncedDocumentWasTotallyScrolled = debounce(
-  documentWasTotallyScrolled,
-  500
-);
+// const debouncedDocumentWasTotallyScrolled = debounce(
+//   documentWasTotallyScrolled,
+//   500
+// );
+const debouncedDocumentWasTotallyScrolled = debounce(galleryWasScrolled, 500);
 
 window.addEventListener("scroll", debouncedDocumentWasTotallyScrolled);
 

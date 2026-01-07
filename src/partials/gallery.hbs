@@ -1,29 +1,29 @@
-<ul class="gallery">
-  {{#each movies}}
-    <li class="gallery-item" data-id={{this.id}}>
-      {{#if this.title}}
-        <h3 class="gallery-title">{{this.title}} </h3>
+{{! <ul class="gallery"> }}
+{{#each movies}}
+  <li class="gallery-item" data-id={{this.id}}>
+    {{#if this.title}}
+      <h3 class="gallery-title">{{this.title}} </h3>
+    {{else}}
+      <h3 class="gallery-title"> {{this.original_title}}</h3>
+    {{/if}}
+    {{#if this.release_date}}
+      <p class="gallery-year">{{formatDate this.release_date}}</p>
+    {{/if}}
+    <div class="img-wrap">
+      {{#if this.poster_path}}
+        <img
+          src="https://image.tmdb.org/t/p/w300{{this.poster_path}}"
+          alt="{{this.title}} "
+        />
       {{else}}
-        <h3 class="gallery-title"> {{this.original_title}}</h3>
+        <img src="src/assets//fallbackForPreview.png" alt="{{this.title}} " />
       {{/if}}
-      {{#if this.release_date}}
-        <p class="gallery-year">{{formatDate this.release_date}}</p>
-      {{/if}}
-      <div class="img-wrap">
-        {{#if this.poster_path}}
-          <img
-            src="https://image.tmdb.org/t/p/w300{{this.poster_path}}"
-            alt="{{this.title}} "
-          />
-        {{else}}
-          <img src="src/assets//fallbackForPreview.png" alt="{{this.title}} " />
-        {{/if}}
-      </div>
+    </div>
 
-      <ul class="gallery-item_genres">
-        {{{genresGenerator this.genre_ids}}}
-      </ul>
-    </li>
-  {{/each}}
+    <ul class="gallery-item_genres">
+      {{{genresGenerator this.genre_ids}}}
+    </ul>
+  </li>
+{{/each}}
 
-</ul>
+{{! </ul> }}

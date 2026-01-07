@@ -6,13 +6,15 @@ const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
 
 export function galleryMarkup(array) {
-  galleryRoot.innerHTML = "";
+  // galleryRoot.innerHTML = "";
+  // for infiniteScroll adding += instead of =
+
   if (array.length === 0) {
     console.log("no results needs indication");
     // return;
   } // no results needs indication
   const html = template({ movies: array });
-  galleryRoot.innerHTML = html;
+  galleryRoot.innerHTML += html;
 
   createPaginationMarkup();
 }
