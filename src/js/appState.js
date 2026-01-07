@@ -19,8 +19,46 @@ class State {
     this.errorMessage = "";
 
     this.status = STATUS.IDLE;
-  }
 
+    // this.setIsloading = () => {
+    //   this.status = STATUS.LOADING;
+    // };
+    // this.setIsSuccess = () => {
+    //   this.status = STATUS.SUCCESS;
+    // };
+    // this.setIsError = () => {
+    //   this.status = STATUS.ERROR;
+    // };
+    // this.setIsIdle = () => {
+    //   this.status = STATUS.IDLE;
+    // };
+
+    // this.setErrorMessage = (message) => {
+    //   this.errorMessage = message;
+    // };
+
+    // this.setSearchQuery = (q) => {
+    //   this.searchQuery = q;
+    // };
+    // this.setPage = (page) => {
+    //   this.page = page;
+    // };
+    // this.setTotalPages = (totalPages) => {
+    //   return (this.total_pages = totalPages);
+    // };
+    // this.setTotalResults = (totalResults) => {
+    //   return (this.total_results = totalResults);
+    // };
+    // this.setCurrentSearchFilter = (newFilterValue) => {
+    //   this.currentSearchFilter = newFilterValue;
+    // };
+    // this.setCurrentResults = (array) => {
+    //   this.currentResults = array;
+    // };
+  }
+  updateGenresList() {
+    fetchGenresList().then((res) => (this.genresList = res.genres));
+  }
   setIsloading() {
     this.status = STATUS.LOADING;
   }
@@ -55,9 +93,6 @@ class State {
   }
   setCurrentResults(array) {
     this.currentResults = array;
-  }
-  updateGenresList() {
-    fetchGenresList().then((res) => (this.genresList = res.genres));
   }
 }
 

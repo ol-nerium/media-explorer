@@ -1,6 +1,6 @@
 import debounce from "debounce";
 
-import { galleryMarkup } from "./js/galleryCreate";
+import { galleryUpdate, isFirstLoad } from "./js/galleryCreate";
 
 import {
   getFilterButtons,
@@ -29,7 +29,7 @@ state.updateGenresList();
 function setState({
   page = 1,
   results = [],
-  total_pages = 0,
+  total_pages = 1,
   total_results = 0,
   filter = null,
   query = null,
@@ -42,48 +42,31 @@ function setState({
   state.setSearchQuery(query);
 }
 
-const onFilterClick = (e) => {
-  const filter = e.target.dataset.filter;
-  const bindedFn = filterButtonsList[filter].bindedFn;
-  state.setIsloading(true);
-
-  bindedFn(1)
-    .then((res) => {
-      setState({ ...res, filter });
-      state.setIsSuccess();
-      galleryMarkup(state.currentResults);
-    })
-    .catch((error) => {
-      state.setIsError();
-      state.setErrorMessage = error;
-    })
-    .finally(() => {
-      state.setIsIdle();
-    });
-};
-
 const onSearchMovies = (e) => {
-  const bindedFn = searchForm.bindedFn;
-  const query = e.target.elements.searchMovieField.value;
-  if (query.trim() === "") {
-    console.log("indicate empty input");
-    return;
+  const query = e.target.elements?.searchMovieField.value;
+  const filter = e.target.dataset.filter;
+
+  // let bindedFn;
+
+  if (query) {
+    if (query.trim() === "") {
+      setErrorMessage("indicate empty input somewhere");
+      console.log('wrote "indicate empty input" as error message to state');
+      return;
+    }
+    state.setSearchQuery(query);
+    state.setPage(1);
+    state.setCurrentSearchFilter(null);
   }
 
-  state.setIsloading(true);
-  bindedFn(1, query)
-    .then((res) => {
-      setState({ ...res, query });
-      state.setIsSuccess();
-      galleryMarkup(state.currentResults);
-    })
-    .catch((error) => {
-      state.setIsError();
-      state.setErrorMessage = error;
-    })
-    .finally(() => {
-      state.setIsIdle();
-    });
+  if (filter) {
+    state.setCurrentSearchFilter(filter);
+    state.setPage(1);
+    state.setSearchQuery(null);
+  }
+  isFirstLoad(true);
+
+  galleryUpdate(state);
 };
 
 const onHeaderBtnClick = (e) => {
@@ -92,19 +75,33 @@ const onHeaderBtnClick = (e) => {
   bindedFn("click to change page");
 };
 
-const debouncedOnFilterClick = debounce(onFilterClick, DEBOUNCE_DELAY);
+const infiniteScrollInitiate = () => {
+  if (
+    Number(state.total_pages) <= Number(state.page) ||
+    Number(state.page) >= 500
+  )
+    return;
+
+  const shouldFetch = galleryWasScrolled();
+  if (shouldFetch) {
+    state.setPage(state.page + 1);
+    galleryUpdate(state);
+  }
+};
+
 const debouncedOnHeaderBtnClick = debounce(onHeaderBtnClick, DEBOUNCE_DELAY);
 const debouncedOnSearchMovies = debounce(onSearchMovies, 300);
+const debouncedGalleryWasScrolled = debounce(infiniteScrollInitiate, 500);
 
 const onDebouncedFormSubmit = (e) => {
   e.preventDefault();
   debouncedOnSearchMovies(e);
 };
 
-nowPlaying.element.addEventListener("click", debouncedOnFilterClick);
-popular.element.addEventListener("click", debouncedOnFilterClick);
-topRated.element.addEventListener("click", debouncedOnFilterClick);
-upcoming.element.addEventListener("click", debouncedOnFilterClick);
+nowPlaying.element.addEventListener("click", debouncedOnSearchMovies);
+popular.element.addEventListener("click", debouncedOnSearchMovies);
+topRated.element.addEventListener("click", debouncedOnSearchMovies);
+upcoming.element.addEventListener("click", debouncedOnSearchMovies);
 
 homeBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
 libraryBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
@@ -113,14 +110,6 @@ searchForm.element.addEventListener("submit", onDebouncedFormSubmit);
 
 document.querySelector(".test-btn").addEventListener("click", scrollUp);
 
-// getCurrentScrollPosition();
+window.addEventListener("scroll", debouncedGalleryWasScrolled);
 
-// const debouncedDocumentWasTotallyScrolled = debounce(
-//   documentWasTotallyScrolled,
-//   500
-// );
-const debouncedDocumentWasTotallyScrolled = debounce(galleryWasScrolled, 500);
-
-window.addEventListener("scroll", debouncedDocumentWasTotallyScrolled);
-
-export { state };
+export { state, setState };
