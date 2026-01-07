@@ -12,6 +12,7 @@ import "./js/utils/handlebarsHelpers";
 
 import { State } from "./js/appState";
 import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
+import { modalOpen } from "./js/modal";
 
 const filterButtonsList = getFilterButtons();
 const headerButtonsList = getHeaderNavButtons();
@@ -110,6 +111,9 @@ searchForm.element.addEventListener("submit", onDebouncedFormSubmit);
 
 document.querySelector(".test-btn").addEventListener("click", scrollUp);
 
-window.addEventListener("scroll", debouncedGalleryWasScrolled);
+// window.addEventListener("scroll", debouncedGalleryWasScrolled);
+
+const gallery = document.getElementById("gallery");
+gallery.addEventListener("click", modalOpen);
 
 export { state, setState };

@@ -1,6 +1,6 @@
 {{! <ul class="gallery"> }}
 {{#each movies}}
-  <li class="gallery-item" data-id={{this.id}}>
+  <li class="gallery-item">
     {{#if this.title}}
       <h3 class="gallery-title">{{this.title}} </h3>
     {{else}}
@@ -13,10 +13,15 @@
       {{#if this.poster_path}}
         <img
           src="https://image.tmdb.org/t/p/w300{{this.poster_path}}"
-          alt="{{this.title}} "
+          alt="{{this.title}}"
+          data-filmid={{this.id}}
         />
       {{else}}
-        <img src="src/assets//fallbackForPreview.png" alt="{{this.title}} " />
+        <img
+          src="src/assets//fallbackForPreview.png"
+          alt="{{this.title}}"
+          data-filmid={{this.id}}
+        />
       {{/if}}
     </div>
 

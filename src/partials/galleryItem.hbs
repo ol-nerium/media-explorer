@@ -1,0 +1,25 @@
+{{!-- {{modalData}} --}}
+<div class="modalContent">
+  <div class="modal-img-wrap">
+    <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
+  </div>
+  <div class="filmInfo">
+    <a href="{{homepage}}"><h2>{{original_title}}</h2></a>
+    <div class="filmInfo-content">
+      <p class="film-info">Budget {{budget}}</p>
+      <p>Collection of {{belongs_to_collection.name}}</p>
+      <div class="genres">
+        <h3>Genres:</h3>
+        <>
+          {{#each genres}}
+          <li data-genre:{{id}}>{{name}}</li>>
+          {{/genres}}
+        </ul>
+      </div>
+      <p class="overview">{{overview}}</p>
+
+    </div>
+
+  </div>
+</div>
+{{!-- {{/modalData}} --}}

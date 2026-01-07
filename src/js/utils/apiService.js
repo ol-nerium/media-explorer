@@ -126,7 +126,7 @@ function getKeyWordTitleById(keyword_id) {
     .catch((e) => console.log(e));
 }
 
-function getMovieById() {
+function getMovieById(movie_id) {
   // Get the top level details of a movie by ID.
   return axios
     .get(`movie/${movie_id}`)

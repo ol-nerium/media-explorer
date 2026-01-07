@@ -17,9 +17,9 @@ class State {
     this.genresList = [];
     this.searchQuery = null;
     this.errorMessage = "";
-
     this.status = STATUS.IDLE;
 
+    this.modal = null;
     // this.setIsloading = () => {
     //   this.status = STATUS.LOADING;
     // };
@@ -93,6 +93,9 @@ class State {
   }
   setCurrentResults(array) {
     this.currentResults = array;
+  }
+  setModalInfo(data) {
+    this.modal = data;
   }
 }
 
