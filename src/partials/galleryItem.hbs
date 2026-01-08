@@ -1,18 +1,25 @@
 {{!-- {{modalData}} --}}
 <div class="backdrop">
-  {{!-- <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" /> --}}
+  <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
 </div>
 
 <div class="modalLayout">
+  <button class="closeModal-btn">x</button>
+
   <div class="modalContent" data-id={{id}}>
     <div class="modalContentHero">
-      <h2 class="film-title">{{original_title}}
-        <span><a
+      {{#if homepage}}
+        <h2 class="film-title">
+          <a
             href="{{homepage}}"
             target="_blank"
             rel="noopener noreferrer"
-          >link</a></span>
-      </h2>
+          >{{original_title}}</a>
+        </h2>
+      {{else}}
+        <h2 class="film-title">{{original_title}} </h2>
+      {{/if}}
+
       <div class="posterImg-wrap">
         <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
       </div>
@@ -55,11 +62,18 @@
                 {{! should be hover text i think }}
                 {{this.name}}
               </p> --}}
-                <div class="logo-wrap"><img
-                    src="https://image.tmdb.org/t/p/w300/{{logo_path}}"
-                    alt="{{this.name}}"
-                    class="productionCompany-logo"
-                  /></div>
+                <div class="logo-wrap">
+                  {{#if logo_path}}
+                    <img
+                      src="https://image.tmdb.org/t/p/w300/{{logo_path}}"
+                      alt="{{this.name}}"
+                      class="productionCompany-logo"
+                    />
+                  {{else}}
+                    <h3 class="productionCompanyName">{{this.name}}</h3>
+                  {{/if}}
+
+                </div>
               </li>
             {{/each}}
           </ul>
@@ -84,8 +98,8 @@
     </div>
   </div>
   <div class="modalBtnBlock">
-    <button class="modalBtnBlock-btn">Add to queque</button>
-    <button class="modalBtnBlock-btn">Add to favorites</button>
+    <button class="modalBtnBlock-btn" data-modalbtn="Queque">Add to queque</button>
+    <button class="modalBtnBlock-btn" data-modalbtn="Favorites">Add to favorites</button>
   </div>
 </div>
 {{!-- {{/modalData}} --}}

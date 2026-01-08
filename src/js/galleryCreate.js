@@ -60,7 +60,6 @@ export async function galleryUpdate(state) {
     .catch((error) => {
       state.setIsError();
       state.setErrorMessage(error.message);
-      alert("error", error.message);
     })
     .finally(() => {
       state.setIsIdle();
