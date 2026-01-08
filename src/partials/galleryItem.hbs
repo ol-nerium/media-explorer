@@ -1,25 +1,91 @@
 {{!-- {{modalData}} --}}
-<div class="modalContent">
-  <div class="modal-img-wrap">
-    <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
-  </div>
-  <div class="filmInfo">
-    <a href="{{homepage}}"><h2>{{original_title}}</h2></a>
-    <div class="filmInfo-content">
-      <p class="film-info">Budget {{budget}}</p>
-      <p>Collection of {{belongs_to_collection.name}}</p>
-      <div class="genres">
-        <h3>Genres:</h3>
-        <>
-          {{#each genres}}
-          <li data-genre:{{id}}>{{name}}</li>>
-          {{/genres}}
-        </ul>
+<div class="backdrop">
+  {{!-- <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" /> --}}
+</div>
+
+<div class="modalLayout">
+  <div class="modalContent" data-id={{id}}>
+    <div class="modalContentHero">
+      <h2 class="film-title">{{original_title}}
+        <span><a
+            href="{{homepage}}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >link</a></span>
+      </h2>
+      <div class="posterImg-wrap">
+        <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
       </div>
-      <p class="overview">{{overview}}</p>
 
     </div>
 
+    <div class="filmInfo">
+      <p class="film-info">Budget {{budget}}</p>
+      <p class="film-info">{{formatDate release_date}}</p>
+      <p class="film-info">Collection of {{belongs_to_collection.name}}</p>
+      <p class="film-info">Duration: {{runtime}} min</p>
+      <p class="overview">{{overview}}</p>
+      <p> popularity: {{popularity}}</p>
+      <p>{{tagline}}</p>
+      <p>{{title}}</p>
+      <p>Voted {{vote_average}} from {{vote_count}} votes</p>
+
+      <div class="genres">
+        <h3 class="modalgenres-title">Genres:</h3>
+        <ul class="modalgenres-list">
+          {{#each genres}}
+            <li
+              data-genre={{this.id}}
+              class="modalgenres-item"
+            >{{this.name}}</li>
+          {{/each}}
+        </ul>
+
+      </div>
+
+      <div class="production">
+        <div class="production-companies">
+          <h3 class="production-title">Production companies:</h3>
+          <ul class="productionCompany-list">
+            {{#each production_companies}}
+              <li data-prodCompany={{this.id}} class="productionCompany-item">
+                {{!-- <p
+                class="logo-text"
+              >
+                {{! should be hover text i think }}
+                {{this.name}}
+              </p> --}}
+                <div class="logo-wrap"><img
+                    src="https://image.tmdb.org/t/p/w300/{{logo_path}}"
+                    alt="{{this.name}}"
+                    class="productionCompany-logo"
+                  /></div>
+              </li>
+            {{/each}}
+          </ul>
+
+        </div>
+        <div class="production-countries">
+          <h3 class="production-title"> Production contry:</h3>
+
+          <ul class="productionCountry-list">
+            {{#each production_countries}}
+              <li class="productionCountry-item"><p
+                  class="productionCountry-itemText"
+                >
+                  {{this.name}}
+                </p>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modalBtnBlock">
+    <button class="modalBtnBlock-btn">Add to queque</button>
+    <button class="modalBtnBlock-btn">Add to favorites</button>
   </div>
 </div>
 {{!-- {{/modalData}} --}}

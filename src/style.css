@@ -1,3 +1,7 @@
+* {
+  outline: 1px solid red;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -39,6 +43,7 @@ img {
   display: block;
   width: 100%;
   height: 100%;
+  height: auto;
 }
 
 .container {
@@ -109,7 +114,7 @@ img {
 
 .main {
   width: 100%;
-  padding: 0 2rem;
+  /* padding: 0 2rem; */
 }
 
 .filterButtonsSection {
@@ -141,24 +146,34 @@ img {
 }
 .gallery-title {
   font-size: 1.5rem;
-  height: 20%;
+  padding: 0 1rem;
+  height: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 111;
 }
+
+.gallery-year {
+  text-align: center;
+}
+
 .img-wrap {
   max-width: 100%;
-  height: 60%;
+  height: 70%;
   /* flex-grow: 2;   */
 }
 
 img {
   object-fit: cover;
+  height: 100%;
 }
 .gallery-item_genres {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  height: 20%;
+  height: 15%;
   align-items: center;
 }
 
@@ -185,17 +200,17 @@ img {
 /* MODAL */
 .modal {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  /* top: 50%;
-  left: 50%;
-  translate: -50% -50%; */
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+
+  z-index: 200;
+
+  min-width: 860px;
 }
 
 .modal.isOpen {
-  z-index: 100;
   display: block;
 }
 .modal.isClosed {
@@ -203,20 +218,204 @@ img {
 }
 
 .backdrop {
-  position: absolute;
-  inset: 0;
-  /* z-index: 111; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(72, 65, 65, 0.4);
+  opacity: 0.9;
 }
-.modalContent {
+
+.backdrop img {
+  height: 100%;
+  /* width: 100%; */
+  object-fit: cover;
+}
+
+/* .modal-img-backdrop {
+  width: 100%;
+  height: 100%;
+  background-color: #242424;
+} */
+
+.modalLayout {
   position: relative;
   width: 50%;
-  height: 50%;
+  height: 80%;
   top: 50%;
   left: 50%;
   translate: -50% -50%;
+  z-index: 111;
+
+  border: 1px solid #000;
+
+  min-width: 550px;
 }
-.modal-img-wrap {
-  width: 50%;
-  height: 30%;
+.modalLayout::after {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  top: 0;
+  left: 0;
+  background-color: rgb(134, 127, 128);
+  z-index: -1;
+}
+
+.modalContent {
+  display: flex;
+  height: 85%;
+}
+.modalBtnBlock {
+  height: 15%;
+  padding: 2rem;
+  /* width: 80%; */
+  display: flex;
+  justify-content: space-around;
+  justify-items: center;
+}
+
+.modalBtnBlock-btn {
+  /* padding: 1rem;
+  font-size: 3rem;
+  flex-basis: 6rem;
+  height: 2rem; */
+}
+
+.modalContentHero {
+  max-width: 50%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.posterImg-wrap {
+  /* height: 70%; */
+  min-height: 60%;
+  /* max-height: 30%; */
+  /* height: 100%; */
+  /* width: 50%; */
+
+  /* max-height: 100%; */
+  /* width: 100%; */
+  /* height: auto; */
+}
+
+.posterImg-wrap img {
+  /* height: 100%; */
+
+  /* width: 100%; */
+  height: 100%;
+  object-fit: scale-down;
+}
+
+.filmInfo {
+  padding: 1rem 1rem 2rem 1rem;
+  position: relative;
+  z-index: 1000;
+  font-weight: 700;
+
+  max-height: 100%;
+  width: 60%;
+
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* 
+.filmInfo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+} */
+
+.film-title {
+  font-size: 2rem;
+  position: relative;
+
+  display: block;
+  max-height: 50%;
+  /* overflow: auto; */
+}
+.film-title span {
+  position: absolute;
+  font-size: 1rem;
+  top: 100%;
+  left: 100%;
+  translate: -100% 0;
+  padding: 0.5rem;
+}
+
+.film-title a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+.production {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.productionCompany-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  /* gap: 1rem; */
+}
+.productionCompany-item {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+.productionCountry-itemText span {
+  display: block;
+}
+.production-title {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.logo-wrap {
+  display: inline-block;
+  height: 50px;
+  /* width: 100%; */
+  /* aspect-ratio: 1/1; */
+}
+
+.logo-wrap:hover {
+  /* ? */
+}
+
+.productionCompany-logo {
+  height: 100%;
+  object-fit: scale-down;
+}
+
+.genres {
+  display: flex;
+  /* align-items: flex-start; */
+  gap: 2rem;
+}
+.modalgenres-title {
+  display: flex;
+  align-items: center;
+  /* display: inline-block; */
+}
+.modalgenres-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 1rem;
+}
+.modalgenres-item {
+  display: inline-block;
+  width: fit-content;
 }
