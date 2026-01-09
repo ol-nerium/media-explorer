@@ -45,7 +45,7 @@ function setState({
 
 const onSearchMovies = (e) => {
   const query = e.target.elements?.searchMovieField.value;
-  const filter = e.target.dataset.filter;
+  const filter = e.target.dataset?.filter;
 
   // let bindedFn;
 
@@ -65,8 +65,8 @@ const onSearchMovies = (e) => {
     state.setPage(1);
     state.setSearchQuery(null);
   }
-  isFirstLoad(true);
 
+  isFirstLoad(true);
   galleryUpdate(state);
 };
 

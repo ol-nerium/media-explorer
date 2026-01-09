@@ -439,6 +439,9 @@ img {
   translate: 100% -150%;
 }
 
-.itemWasAddedToLS {
+.removeItem {
+  background-color: red;
+}
+.addItem {
   background-color: green;
 }

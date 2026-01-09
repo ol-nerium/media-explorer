@@ -1,41 +1,46 @@
 let storedInLS = false;
 
 export function saveToLS(value, key) {
-  const currentStorageArray = JSON.parse(getFromLS(key));
-  const newValue = value;
-  let sterializedValue;
+  try {
+    const currentStorageArray = JSON.parse(getFromLS(key));
+    const newValue = value.toString();
+    let sterializedValue;
 
-  if (!currentStorageArray) {
-    // if key is missing in LS
-    sterializedValue = JSON.stringify([value]);
-  } else {
-    currentStorageArray.push(newValue);
-    sterializedValue = JSON.stringify(removeDubles(currentStorageArray));
-    //sterialized and filtered from doubles*
+    if (!currentStorageArray) {
+      // if key is missing in LS or value null
+      sterializedValue = JSON.stringify([newValue]);
+    } else {
+      currentStorageArray.push(newValue);
+      sterializedValue = JSON.stringify(removeDubles(currentStorageArray));
+      //sterialized and filtered from doubles*
+    }
+
+    // decide if remove or add to/from LS
+    isRecordStoredInLS(newValue, key);
+    if (storedInLS) removeFromLS(newValue, key);
+    if (!storedInLS) localStorage.setItem(key, sterializedValue);
+  } catch (error) {
+    throw error;
   }
-
-  console.log(storedInLS);
-  // decide if remove or add to/from LS
-  isRecordStoredInLS(value, key);
-  if (storedInLS) removeFromLS(newValue, key);
-  if (!storedInLS) localStorage.setItem(key, sterializedValue);
 }
 
-export function removeFromLS(value, key) {
-  // localStorage.removeItem(key);
-  const currentStorage = JSON.parse(getFromLS(key));
-  let resArr = currentStorage;
-  if (!!currentStorage) {
-    resArr = currentStorage.filter((item) => item !== value);
+export function removeFromLS(newValue, key) {
+  try {
+    const currentStorage = JSON.parse(getFromLS(key));
+    let resArr = currentStorage;
+
+    if (!!currentStorage) {
+      resArr = currentStorage.filter((item) => item !== newValue);
+    }
+    const sterializedValue = JSON.stringify(resArr);
+    localStorage.setItem(key, sterializedValue);
+  } catch (error) {
+    throw error;
   }
-  const sterializedValue = JSON.stringify(resArr);
-  localStorage.setItem(key, sterializedValue);
 }
 
 export function getFromLS(key) {
   return localStorage.getItem(key);
-  // const value = JSON.parse(localStorage.getItem(key));
-  // return value;
 }
 
 function removeDubles(array) {
@@ -49,10 +54,15 @@ function removeDubles(array) {
 }
 
 export function isRecordStoredInLS(value, key) {
-  const array = JSON.parse(localStorage.getItem(key));
-  console.log(array);
-  if (array) {
-    storedInLS = array.includes(value);
-    return storedInLS;
+  try {
+    const array = JSON.parse(localStorage.getItem(key));
+    const stringedValue = value.toString();
+    console.log(array, stringedValue);
+    if (!!array) {
+      storedInLS = array.includes(stringedValue);
+      return storedInLS;
+    }
+  } catch (error) {
+    throw error;
   }
 }

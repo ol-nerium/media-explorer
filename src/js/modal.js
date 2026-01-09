@@ -49,14 +49,9 @@ export function modalOpen(e) {
 
       checkItemInLS(addToQuequeBtn, id);
       checkItemInLS(addToFavoritesBtn, id);
-      // id here is something wrong! need fix
-      // addToQuequeBtn.classList.add("wasdada");
-      // addToFavoritesBtn.classList.add("wasdada");
     })
     .catch((e) => {
-      console.log("failed to open modal/ have done something stupid");
-      // console.log(e.message);
-      throw e.message;
+      console.log("error", e.message);
     });
 }
 
@@ -91,28 +86,27 @@ function handleEscapeKey(e) {
 }
 
 function onClickmodalButton(e) {
-  // console.log(e.target.dataset.modalbtn);
-  // console.log(state.modal);
   const key = e.target.dataset.modalbtn;
   const value = state.modal.id;
 
-  // console.log(typeof key, typeof value);
+  // checkItemInLS(addToFavoritesBtn, value);
+
   saveToLS(value, key);
-  // console.log(getFromLS(key));
+  checkItemInLS(e.target, value);
 }
 
 function checkItemInLS(btn, id) {
   //addToQuequeBtn.dataset.modalbtn; // key
   //addToFavoritesBtn.dataset.modalbtn; //key
-  // value=id
+  // value=id //
 
-  console.log(isRecordStoredInLS(id, btn.dataset.modalbtn));
-  console.log(btn.dataset.modalbtn);
-  console.log(id);
   if (isRecordStoredInLS(id, btn.dataset.modalbtn)) {
-    btn.classList.add("itemWasAddedToLS");
-    btn.textContent = "Item already in LS";
+    btn.classList.add("removeItem");
+    btn.classList.remove("addItem");
+    btn.textContent = "Remove from " + [btn.dataset.modalbtn];
+  } else {
+    btn.classList.remove("removeItem");
+    btn.classList.add("addItem");
+    btn.textContent = "Add to " + [btn.dataset.modalbtn];
   }
-
-  // isRecordStoredInLS(id, btn.dataset.modalbtn);
 }
