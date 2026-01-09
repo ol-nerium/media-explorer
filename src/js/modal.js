@@ -2,7 +2,7 @@ import Handlebars from "handlebars";
 import { getMovieById } from "./utils/apiService";
 import { state } from "../main";
 import galleryItem from "../partials/galleryItem.hbs?raw";
-import { getFromLS, isRecordStoredInLS, saveToLS } from "./localStorage";
+import { isRecordStoredInLS, saveToLS } from "./localStorage";
 
 const template = Handlebars.compile(galleryItem);
 const modalRoot = document.getElementById("modal");
@@ -19,6 +19,7 @@ export function modalOpen(e) {
   getMovieById(id)
     .then((res) => {
       state.setModalInfo(res);
+      // console.log(res);
       const html = template(state.modal);
       // modalRoot.insertAdjacentHTML("afterbegin", html);
       modalRoot.innerHTML = html;
@@ -51,6 +52,7 @@ export function modalOpen(e) {
       checkItemInLS(addToFavoritesBtn, id);
     })
     .catch((e) => {
+      throw e;
       console.log("error", e.message);
     });
 }
@@ -89,8 +91,6 @@ function onClickmodalButton(e) {
   const key = e.target.dataset.modalbtn;
   const value = state.modal.id;
 
-  // checkItemInLS(addToFavoritesBtn, value);
-
   saveToLS(value, key);
   checkItemInLS(e.target, value);
 }
@@ -101,8 +101,8 @@ function checkItemInLS(btn, id) {
   // value=id //
 
   if (isRecordStoredInLS(id, btn.dataset.modalbtn)) {
-    btn.classList.add("removeItem");
     btn.classList.remove("addItem");
+    btn.classList.add("removeItem");
     btn.textContent = "Remove from " + [btn.dataset.modalbtn];
   } else {
     btn.classList.remove("removeItem");

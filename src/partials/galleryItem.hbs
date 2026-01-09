@@ -1,10 +1,15 @@
 {{!-- {{modalData}} --}}
 <div class="backdrop">
-  <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
+  {{#if backdrop_path}}
+    <img
+      src="https://image.tmdb.org/t/p/original{{backdrop_path}}"
+      alt="film-poster"
+    />
+  {{/if}}
 </div>
 
+<button class="closeModal-btn">x</button>
 <div class="modalLayout">
-  <button class="closeModal-btn">x</button>
 
   <div class="modalContent" data-id={{id}}>
     <div class="modalContentHero">
@@ -14,86 +19,100 @@
             href="{{homepage}}"
             target="_blank"
             rel="noopener noreferrer"
-          >{{original_title}}</a>
+          >{{title}}</a>
         </h2>
       {{else}}
         <h2 class="film-title">{{original_title}} </h2>
       {{/if}}
 
       <div class="posterImg-wrap">
-        <img src="https://image.tmdb.org/t/p/original{{poster_path}}" alt="" />
+        <img
+          src="https://image.tmdb.org/t/p/original{{poster_path}}"
+          alt="{{original_title}} {{title}}"
+        />
       </div>
 
     </div>
 
     <div class="filmInfo">
-      <p class="film-info">Budget {{budget}}</p>
+      <p class="film-info">Budget: {{verifyAvailability budget}}</p>
       <p class="film-info">{{formatDate release_date}}</p>
-      <p class="film-info">Collection of {{belongs_to_collection.name}}</p>
-      <p class="film-info">Duration: {{runtime}} min</p>
-      <p class="overview">{{overview}}</p>
-      <p> popularity: {{popularity}}</p>
-      <p>{{tagline}}</p>
-      <p>{{title}}</p>
-      <p>Voted {{vote_average}} from {{vote_count}} votes</p>
+      {{#if belongs_to_collection}}
+        <p class="film-info">Collection of:
+          {{verifyAvailability belongs_to_collection.name}}</p>
+      {{/if}}
+      <p class="film-info">Duration: {{verifyAvailability runtime}} min</p>
+      <p class="overview"> Overview: {{verifyAvailability overview}}</p>
+      <p> popularity: {{verifyAvailability popularity}}</p>
+      <p>Tagline: {{verifyAvailability tagline}}</p>
+      <p>Original title: {{verifyAvailability original_title}}</p>
 
-      <div class="genres">
-        <h3 class="modalgenres-title">Genres:</h3>
-        <ul class="modalgenres-list">
-          {{#each genres}}
-            <li
-              data-genre={{this.id}}
-              class="modalgenres-item"
-            >{{this.name}}</li>
-          {{/each}}
-        </ul>
+      {{#if vote_average}}
+        <p>Voted as {{vote_average}} from {{vote_count}} votes</p>
+      {{/if}}
+      {{#if genres}}
+        <div class="genres">
+          <h3 class="modalgenres-title">Genres:</h3>
+          <ul class="modalgenres-list">
+            {{#each genres}}
+              <li
+                data-genre={{this.id}}
+                class="modalgenres-item"
+              >{{this.name}}</li>
+            {{/each}}
+          </ul>
 
-      </div>
-
+        </div>
+      {{/if}}
       <div class="production">
-        <div class="production-companies">
-          <h3 class="production-title">Production companies:</h3>
-          <ul class="productionCompany-list">
-            {{#each production_companies}}
-              <li data-prodCompany={{this.id}} class="productionCompany-item">
-                {{!-- <p
+        {{#if production_companies}}
+
+          <div class="production-companies">
+            <h3 class="production-title">Production companies:</h3>
+            <ul class="productionCompany-list">
+              {{#each production_companies}}
+                <li data-prodCompany={{this.id}} class="productionCompany-item">
+                  {{!-- <p
                 class="logo-text"
               >
                 {{! should be hover text i think }}
                 {{this.name}}
               </p> --}}
-                <div class="logo-wrap">
-                  {{#if logo_path}}
-                    <img
-                      src="https://image.tmdb.org/t/p/w300/{{logo_path}}"
-                      alt="{{this.name}}"
-                      class="productionCompany-logo"
-                    />
-                  {{else}}
-                    <h3 class="productionCompanyName">{{this.name}}</h3>
-                  {{/if}}
+                  <div class="logo-wrap">
+                    {{#if logo_path}}
+                      <img
+                        src="https://image.tmdb.org/t/p/w300/{{logo_path}}"
+                        alt="{{this.name}}"
+                        class="productionCompany-logo"
+                      />
+                    {{else}}
+                      <h3 class="productionCompanyName">{{this.name}}</h3>
+                    {{/if}}
 
-                </div>
-              </li>
-            {{/each}}
-          </ul>
+                  </div>
+                </li>
+              {{/each}}
+            </ul>
 
-        </div>
-        <div class="production-countries">
-          <h3 class="production-title"> Production contry:</h3>
+          </div>
+        {{/if}}
 
-          <ul class="productionCountry-list">
-            {{#each production_countries}}
-              <li class="productionCountry-item"><p
-                  class="productionCountry-itemText"
-                >
-                  {{this.name}}
-                </p>
-              </li>
-            {{/each}}
-          </ul>
-        </div>
+        {{#if production_countries}}
+          <div class="production-countries">
+            <h3 class="production-title"> Production contry:</h3>
 
+            <ul class="productionCountry-list">
+              {{#each production_countries}}
+                <li class="productionCountry-item"><p
+                    class="productionCountry-itemText"
+                  >
+                    {{this.name}}
+                  </p>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>

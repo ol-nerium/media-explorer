@@ -2,10 +2,13 @@ import Handlebars from "handlebars";
 import gallery from "../partials/gallery.hbs?raw";
 import { setState } from "../main";
 import { createPaginationMarkup } from "./pagination";
-import { getFilterButtons, getHeaderSearchForm } from "./utils/refs";
+// import { getFilterButtons, getHeaderSearchForm } from "./utils/refs";
+import { filterButtonsRefs, headerSearchRef } from "./utils/refs";
+import { modalOpen } from "./modal";
 
 const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
+galleryRoot.addEventListener("click", modalOpen);
 let firstLoad = true;
 
 export function galleryMarkup(array) {
@@ -25,30 +28,31 @@ export function galleryMarkup(array) {
   } else galleryRoot.innerHTML += html;
 
   createPaginationMarkup();
+
   firstLoad = false;
 }
 
 export async function galleryUpdate(state) {
   const { currentSearchFilter, searchQuery, page } = state;
-  const filterButtons = getFilterButtons();
-  const { searchForm } = getHeaderSearchForm();
-
+  const { searchForm } = headerSearchRef;
+  console.log(headerSearchRef);
   let currentApiFunction;
   let currentSearchValue;
 
   if (currentSearchFilter) {
-    currentApiFunction = filterButtons[currentSearchFilter].bindedFn;
+    currentApiFunction = filterButtonsRefs[currentSearchFilter].fetchFn;
     currentSearchValue = { filter: currentSearchFilter };
     console.log("search by filter");
   }
   if (searchQuery) {
-    currentApiFunction = searchForm.bindedFn;
+    currentApiFunction = searchForm.fetchFn;
     currentSearchValue = { query: searchQuery };
     console.log("search by query");
   }
 
   state.setIsloading();
-  await currentApiFunction(page, ...Object.values(currentSearchValue))
+  // await
+  currentApiFunction(page, ...Object.values(currentSearchValue))
     .then((res) => {
       setState({ ...res, ...currentSearchValue });
 

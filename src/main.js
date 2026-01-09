@@ -1,58 +1,56 @@
 import debounce from "debounce";
+import "./style.css";
 
+import "./js/utils/handlebarsHelpers";
 import { galleryUpdate, isFirstLoad } from "./js/galleryCreate";
 
+import { getClickEventElements, getSubmitEventElements } from "./js/utils/refs";
 import {
-  getFilterButtons,
-  getHeaderNavButtons,
-  getHeaderSearchForm,
+  headerLinksRefs,
+  filterButtonsRefs,
+  headerSearchRef,
+  scrollUpButtonRef,
 } from "./js/utils/refs";
-import "./style.css";
-import "./js/utils/handlebarsHelpers";
 
 import { State } from "./js/appState";
 import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
-import { modalOpen } from "./js/modal";
+import { changePage } from "./js/pageRouting";
 
-const filterButtonsList = getFilterButtons();
-const headerButtonsList = getHeaderNavButtons();
-const { searchForm } = getHeaderSearchForm();
-
-const { nowPlaying, popular, topRated, upcoming, trendDay, trendWeek } =
-  filterButtonsList;
-const { homeBtn, libraryBtn } = headerButtonsList;
-
-const DEBOUNCE_DELAY = 300;
+const { nowPlaying, popular, topRated, upcoming } = filterButtonsRefs;
+const { searchForm } = headerSearchRef;
+const { scrollUpBtn } = scrollUpButtonRef;
+const { homeLink, libraryLink, logoLink } = headerLinksRefs;
 
 const state = new State();
 state.updateGenresList();
 
-function setState({
+const DEBOUNCE_DELAY = 300;
+
+const setState = ({
   page = 1,
   results = [],
   total_pages = 1,
   total_results = 0,
   filter = null,
   query = null,
-}) {
+}) => {
   state.setPage(page);
   state.setCurrentResults(results);
   state.setTotalPages(total_pages);
   state.setTotalResults(total_results);
   state.setCurrentSearchFilter(filter);
   state.setSearchQuery(query);
-}
+};
 
 const onSearchMovies = (e) => {
+  // console.log(target);
   const query = e.target.elements?.searchMovieField.value;
   const filter = e.target.dataset?.filter;
 
-  // let bindedFn;
-
   if (query) {
     if (query.trim() === "") {
-      setErrorMessage("indicate empty input somewhere");
-      console.log('wrote "indicate empty input" as error message to state');
+      // setErrorMessage("indicate empty input somewhere");
+      console.log(' "indicate empty input" ');
       return;
     }
     state.setSearchQuery(query);
@@ -70,18 +68,23 @@ const onSearchMovies = (e) => {
   galleryUpdate(state);
 };
 
-const onHeaderBtnClick = (e) => {
-  const target = e.target.dataset.type;
-  const bindedFn = headerButtonsList[target].bindedFn;
-  bindedFn("click to change page");
+const headerLinkClick = (target) => {
+  const clickedLink = target.dataset.type;
+  changePage(clickedLink);
+  // const listenerFn = headerLinksRefs[clickedLink].listenerFn;
+  // listenerFn("click to change page to " + clickedLink);
 };
 
 const infiniteScrollInitiate = () => {
   if (
     Number(state.total_pages) <= Number(state.page) ||
     Number(state.page) >= 500
-  )
+    // ||
+    // state.total_results.length < 20
+  ) {
+    // console.log("should stop infinite scroll");
     return;
+  }
 
   const shouldFetch = galleryWasScrolled();
   if (shouldFetch) {
@@ -90,30 +93,65 @@ const infiniteScrollInitiate = () => {
   }
 };
 
-const debouncedOnHeaderBtnClick = debounce(onHeaderBtnClick, DEBOUNCE_DELAY);
-const debouncedOnSearchMovies = debounce(onSearchMovies, 300);
-const debouncedGalleryWasScrolled = debounce(infiniteScrollInitiate, 500);
+const debouncedOnSearchMovies = debounce(onSearchMovies, DEBOUNCE_DELAY);
+const debouncedGalleryWasScrolled = debounce(
+  infiniteScrollInitiate,
+  DEBOUNCE_DELAY
+);
+
+const debouncedHeaderLinkClick = debounce(headerLinkClick, DEBOUNCE_DELAY);
+const debouncedScrollUpOnClick = debounce(scrollUp, DEBOUNCE_DELAY);
 
 const onDebouncedFormSubmit = (e) => {
   e.preventDefault();
+  // const target = e.target;
   debouncedOnSearchMovies(e);
 };
 
-nowPlaying.element.addEventListener("click", debouncedOnSearchMovies);
-popular.element.addEventListener("click", debouncedOnSearchMovies);
-topRated.element.addEventListener("click", debouncedOnSearchMovies);
-upcoming.element.addEventListener("click", debouncedOnSearchMovies);
+const onDebouncedHeaderLinkClick = (e) => {
+  e.preventDefault();
+  const target = e.target;
+  debouncedHeaderLinkClick(target);
+};
 
-homeBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
-libraryBtn.element.addEventListener("click", debouncedOnHeaderBtnClick);
+function initilizeListeners() {
+  homeLink.listenerFn = onDebouncedHeaderLinkClick;
+  libraryLink.listenerFn = onDebouncedHeaderLinkClick;
+  logoLink.listenerFn = onDebouncedHeaderLinkClick;
+  searchForm.listenerFn = onDebouncedFormSubmit;
 
-searchForm.element.addEventListener("submit", onDebouncedFormSubmit);
+  nowPlaying.listenerFn = debouncedOnSearchMovies;
+  popular.listenerFn = debouncedOnSearchMovies;
+  topRated.listenerFn = debouncedOnSearchMovies;
+  upcoming.listenerFn = debouncedOnSearchMovies;
+  scrollUpBtn.listenerFn = debouncedScrollUpOnClick;
+}
 
-document.querySelector(".test-btn").addEventListener("click", scrollUp);
+window.addEventListener("scroll", debouncedGalleryWasScrolled);
 
-// window.addEventListener("scroll", debouncedGalleryWasScrolled);
+function addEventListeners(eventType, elements) {
+  const currentElements = elements.filter((item) => {
+    return !!item.element;
+  });
 
-const gallery = document.getElementById("gallery");
-gallery.addEventListener("click", modalOpen);
+  currentElements.forEach((item) => {
+    item.element.addEventListener(eventType, item.listenerFn);
+  });
+}
+
+function removeEventListeners(eventType, elements) {
+  const missingElements = elements.filter((item) => !item.element);
+  missingElements.forEach((item) =>
+    item.element.removeEventListener(eventType, item.listenerFn)
+  );
+  // console.log(missingElements);
+}
+
+initilizeListeners();
+console.log(homeLink);
+addEventListeners("click", getClickEventElements());
+addEventListeners("submit", getSubmitEventElements());
+// removeEventListeners("click", getClickEventElements());
+// removeEventListeners("submit", getSubmitEventElements());
 
 export { state, setState };

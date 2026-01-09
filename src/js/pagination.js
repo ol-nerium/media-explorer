@@ -1,7 +1,7 @@
 import { state } from "../main";
 import { galleryUpdate } from "./galleryCreate";
-
 const paginationRoot = document.getElementById("pagination");
+paginationRoot.addEventListener("click", paginationInterface);
 
 function createPaginationButtonsList() {
   let page = Number(state.page);
@@ -61,7 +61,7 @@ function paginationClassWork() {
     document.querySelector(".leftArrow").classList.add("inactive");
 }
 
-paginationRoot.addEventListener("click", (e) => {
+function paginationInterface(e) {
   const total_pages = Number(state.total_pages);
   const page = Number(state.page);
 
@@ -76,6 +76,6 @@ paginationRoot.addEventListener("click", (e) => {
 
   if (page !== Number(state.page) || total_pages !== Number(state.total_pages))
     galleryUpdate(state);
-});
+}
 
-export { createPaginationMarkup };
+export { createPaginationMarkup, paginationInterface };

@@ -1,3 +1,4 @@
+import { scrollUp } from "../scrollInterface";
 import {
   getMovieByTitle,
   getNowPlayingMoviesList,
@@ -8,23 +9,29 @@ import {
   getUpcomingMoviesList,
 } from "./apiService";
 
+import { changePage } from "../pageRouting";
+
 const getFilterButtons = () => {
   return {
     nowPlaying: {
       element: document.querySelector('[data-filter="nowPlaying"]'),
-      bindedFn: getNowPlayingMoviesList,
+      fetchFn: getNowPlayingMoviesList,
+      listenerFn: null,
     },
     popular: {
       element: document.querySelector('[data-filter="popular"]'),
-      bindedFn: getPopularMoviesList,
+      fetchFn: getPopularMoviesList,
+      listenerFn: null,
     },
     topRated: {
       element: document.querySelector('[data-filter="topRated"]'),
-      bindedFn: getTopRatedMoviesList,
+      fetchFn: getTopRatedMoviesList,
+      listenerFn: null,
     },
     upcoming: {
       element: document.querySelector('[data-filter="upcoming"]'),
-      bindedFn: getUpcomingMoviesList,
+      fetchFn: getUpcomingMoviesList,
+      listenerFn: null,
     },
     // trendDay: {
     //   element: document.querySelector('[data-filter="trendDay"]'),
@@ -37,15 +44,19 @@ const getFilterButtons = () => {
   };
 };
 
-const getHeaderNavButtons = () => {
+const getHeaderNavLinks = () => {
   return {
-    homeBtn: {
-      element: document.querySelector('[data-type="homeBtn"]'),
-      bindedFn: console.log,
+    homeLink: {
+      element: document.querySelector('[data-type="homeLink"]'),
+      listenerFn: null,
     },
-    libraryBtn: {
-      element: document.querySelector("[data-type='libraryBtn']"),
-      bindedFn: console.log,
+    libraryLink: {
+      element: document.querySelector("[data-type='libraryLink']"),
+      listenerFn: null,
+    },
+    logoLink: {
+      element: document.querySelector(".logoLink"),
+      listenerFn: null,
     },
   };
 };
@@ -57,9 +68,54 @@ const getHeaderSearchForm = () => {
     // },
     searchForm: {
       element: document.querySelector(".searchForm"),
-      bindedFn: getMovieByTitle,
+      fetchFn: getMovieByTitle,
+      listenerFn: null,
     },
   };
 };
 
-export { getFilterButtons, getHeaderNavButtons, getHeaderSearchForm };
+const scrollUpButton = () => {
+  return {
+    scrollUpBtn: {
+      element: document.querySelector(".scrollup-btn"),
+      listenerFn: null,
+    },
+  };
+};
+
+// export {
+//   getFilterButtons,
+//   getHeaderNavLinks,
+//   getHeaderSearchForm,
+//   scrollUpButton,
+// };
+
+const headerLinksRefs = getHeaderNavLinks();
+const filterButtonsRefs = getFilterButtons();
+const headerSearchRef = getHeaderSearchForm();
+const scrollUpButtonRef = scrollUpButton();
+
+function getClickEventElements() {
+  return [
+    ...Object.values(headerLinksRefs),
+    ...Object.values(filterButtonsRefs),
+    ...Object.values(scrollUpButtonRef),
+  ];
+}
+
+function getSubmitEventElements() {
+  return [...Object.values(headerSearchRef)];
+}
+
+// export function getScrollEventElements() {
+//   return [];
+// }
+
+export {
+  headerLinksRefs,
+  filterButtonsRefs,
+  headerSearchRef,
+  scrollUpButtonRef,
+  getClickEventElements,
+  getSubmitEventElements,
+};

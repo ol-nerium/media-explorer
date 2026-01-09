@@ -57,7 +57,6 @@ export function isRecordStoredInLS(value, key) {
   try {
     const array = JSON.parse(localStorage.getItem(key));
     const stringedValue = value.toString();
-    console.log(array, stringedValue);
     if (!!array) {
       storedInLS = array.includes(stringedValue);
       return storedInLS;

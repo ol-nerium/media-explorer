@@ -12,6 +12,16 @@ Handlebars.registerHelper("genresGenerator", function (genreIds) {
 });
 
 Handlebars.registerHelper("formatDate", function (date) {
+  if (!date) {
+    console.log(date);
+    return;
+  }
   const newDate = format(date, "MM/yyyy");
   return `released ${newDate}`;
+});
+
+Handlebars.registerHelper("verifyAvailability", function (value) {
+  if (!value) {
+    return "no info";
+  } else return value;
 });
