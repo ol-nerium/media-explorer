@@ -10,10 +10,10 @@ const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
 galleryRoot.addEventListener("click", modalOpen);
 let firstLoad = true;
+let infiniteScroll = false;
 
 export function galleryMarkup(array) {
   // if (firstLoad) galleryRoot.innerHTML = "";
-  // console.log(firstLoad);
 
   // galleryRoot.innerHTML = "";
   // for infiniteScroll adding += instead of =
@@ -22,8 +22,9 @@ export function galleryMarkup(array) {
     console.log("no results needs indication");
     return;
   } // no results needs indication
+
   const html = template({ movies: array });
-  if (firstLoad) {
+  if (firstLoad || !infiniteScroll) {
     galleryRoot.innerHTML = html;
   } else galleryRoot.innerHTML += html;
 
@@ -35,7 +36,6 @@ export function galleryMarkup(array) {
 export async function galleryUpdate(state) {
   const { currentSearchFilter, searchQuery, page } = state;
   const { searchForm } = headerSearchRef;
-  console.log(headerSearchRef);
   let currentApiFunction;
   let currentSearchValue;
 
@@ -55,7 +55,7 @@ export async function galleryUpdate(state) {
   currentApiFunction(page, ...Object.values(currentSearchValue))
     .then((res) => {
       setState({ ...res, ...currentSearchValue });
-
+      console.log(res);
       galleryMarkup(state.currentResults);
       firstLoad = false;
 
@@ -73,4 +73,8 @@ export async function galleryUpdate(state) {
 export function isFirstLoad(bool) {
   // if (page > 1) firstLoad = false;
   firstLoad = bool;
+}
+
+export function isInfiniteScroll(bool) {
+  infiniteScroll = bool;
 }

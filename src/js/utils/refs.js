@@ -9,8 +9,6 @@ import {
   getUpcomingMoviesList,
 } from "./apiService";
 
-import { changePage } from "../pageRouting";
-
 const getFilterButtons = () => {
   return {
     nowPlaying: {
@@ -33,14 +31,21 @@ const getFilterButtons = () => {
       fetchFn: getUpcomingMoviesList,
       listenerFn: null,
     },
-    // trendDay: {
-    //   element: document.querySelector('[data-filter="trendDay"]'),
-    //   bindedFn: getTMDBTrendingByDayMoviesList,
-    // },
-    // trendWeek: {
-    //   element: document.querySelector('[data-filter="trendWeek"]'),
-    //   bindedFn: getTMDBTrendingByWeekMoviesList,
-    // },
+  };
+};
+
+const getLibraryButtons = () => {
+  return {
+    favorites: {
+      element: document.querySelector('[data-filter="Favorites"]'),
+      fetchFn: null,
+      listenerFn: null,
+    },
+    queque: {
+      element: document.querySelector('[data-filter="Queque"]'),
+      fetchFn: null,
+      listenerFn: null,
+    },
   };
 };
 
@@ -90,15 +95,26 @@ const scrollUpButton = () => {
 //   scrollUpButton,
 // };
 
-const headerLinksRefs = getHeaderNavLinks();
-const filterButtonsRefs = getFilterButtons();
-const headerSearchRef = getHeaderSearchForm();
-const scrollUpButtonRef = scrollUpButton();
+let headerLinksRefs = getHeaderNavLinks();
+let filterButtonsRefs = getFilterButtons();
+let libraryButtonsRefs = getLibraryButtons();
+let headerSearchRef = getHeaderSearchForm();
+let scrollUpButtonRef = scrollUpButton();
+
+export function reloadRefs() {
+  headerLinksRefs = getHeaderNavLinks();
+  filterButtonsRefs = getFilterButtons();
+  libraryButtonsRefs = getLibraryButtons();
+  headerSearchRef = getHeaderSearchForm();
+  scrollUpButtonRef = scrollUpButton();
+}
 
 function getClickEventElements() {
+  // console.log(filterButtonsRefs, Object.values(filterButtonsRefs));
   return [
     ...Object.values(headerLinksRefs),
     ...Object.values(filterButtonsRefs),
+    ...Object.values(libraryButtonsRefs),
     ...Object.values(scrollUpButtonRef),
   ];
 }
@@ -114,6 +130,7 @@ function getSubmitEventElements() {
 export {
   headerLinksRefs,
   filterButtonsRefs,
+  libraryButtonsRefs,
   headerSearchRef,
   scrollUpButtonRef,
   getClickEventElements,

@@ -1,4 +1,5 @@
 import { getGenresList as fetchGenresList } from "./utils/apiService";
+import { SECTIONS } from "./pageRouting";
 
 const STATUS = {
   IDLE: "idle",
@@ -20,10 +21,17 @@ class State {
     this.status = STATUS.IDLE;
 
     this.modal = null;
+
+    this.currentSection = SECTIONS.homeLink;
   }
   updateGenresList() {
     fetchGenresList().then((res) => (this.genresList = res.genres));
   }
+
+  setCurrentSection(currentSection) {
+    this.currentSection = currentSection;
+  }
+
   setIsloading() {
     this.status = STATUS.LOADING;
   }

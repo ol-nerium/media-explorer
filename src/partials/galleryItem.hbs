@@ -26,10 +26,18 @@
       {{/if}}
 
       <div class="posterImg-wrap">
-        <img
-          src="https://image.tmdb.org/t/p/original{{poster_path}}"
-          alt="{{original_title}} {{title}}"
-        />
+        {{#if poster_path}}
+          <img
+            src="https://image.tmdb.org/t/p/original{{poster_path}}"
+            alt="{{original_title}} {{title}}"
+          />
+        {{else}}
+          <img
+            src="src/assets//fallbackForPreview.png"
+            alt="{{original_title}} {{this.title}}"
+            data-filmid={{this.id}}
+          />
+        {{/if}}
       </div>
 
     </div>

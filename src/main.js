@@ -2,29 +2,30 @@ import debounce from "debounce";
 import "./style.css";
 
 import "./js/utils/handlebarsHelpers";
-import { galleryUpdate, isFirstLoad } from "./js/galleryCreate";
+import {
+  galleryUpdate,
+  isFirstLoad,
+  isInfiniteScroll,
+} from "./js/galleryCreate";
 
 import { getClickEventElements, getSubmitEventElements } from "./js/utils/refs";
 import {
   headerLinksRefs,
   filterButtonsRefs,
+  libraryButtonsRefs,
   headerSearchRef,
   scrollUpButtonRef,
 } from "./js/utils/refs";
 
 import { State } from "./js/appState";
 import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
-import { changePage } from "./js/pageRouting";
-
-const { nowPlaying, popular, topRated, upcoming } = filterButtonsRefs;
-const { searchForm } = headerSearchRef;
-const { scrollUpBtn } = scrollUpButtonRef;
-const { homeLink, libraryLink, logoLink } = headerLinksRefs;
+import { changeSection } from "./js/pageRouting";
+import { fetchPageWithResults } from "./js/libraryButtonsInterface";
 
 const state = new State();
 state.updateGenresList();
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 500;
 
 const setState = ({
   page = 1,
@@ -42,14 +43,12 @@ const setState = ({
   state.setSearchQuery(query);
 };
 
-const onSearchMovies = (e) => {
-  // console.log(target);
-  const query = e.target.elements?.searchMovieField.value;
-  const filter = e.target.dataset?.filter;
+const onSearchMovies = (target) => {
+  const query = target.elements?.searchMovieField.value;
+  const filter = target.dataset?.filter;
 
   if (query) {
     if (query.trim() === "") {
-      // setErrorMessage("indicate empty input somewhere");
       console.log(' "indicate empty input" ');
       return;
     }
@@ -69,26 +68,21 @@ const onSearchMovies = (e) => {
 };
 
 const headerLinkClick = (target) => {
-  const clickedLink = target.dataset.type;
-  changePage(clickedLink);
-  // const listenerFn = headerLinksRefs[clickedLink].listenerFn;
-  // listenerFn("click to change page to " + clickedLink);
+  const clickedLinkName = target.dataset.type;
+  changeSection(clickedLinkName);
 };
 
 const infiniteScrollInitiate = () => {
   if (
     Number(state.total_pages) <= Number(state.page) ||
     Number(state.page) >= 500
-    // ||
-    // state.total_results.length < 20
-  ) {
-    // console.log("should stop infinite scroll");
+  )
     return;
-  }
 
   const shouldFetch = galleryWasScrolled();
   if (shouldFetch) {
     state.setPage(state.page + 1);
+    isInfiniteScroll(true);
     galleryUpdate(state);
   }
 };
@@ -98,14 +92,25 @@ const debouncedGalleryWasScrolled = debounce(
   infiniteScrollInitiate,
   DEBOUNCE_DELAY
 );
+const debouncedLibraryButtonClick = debounce(
+  fetchPageWithResults,
+  DEBOUNCE_DELAY
+);
+
+const onDebouncedLibraryButtonClick = (e) => {
+  const filterValue = e.target.dataset?.filter;
+  if (!filterValue) return;
+  debouncedLibraryButtonClick(filterValue, 1);
+  // filterValue, page;
+};
 
 const debouncedHeaderLinkClick = debounce(headerLinkClick, DEBOUNCE_DELAY);
 const debouncedScrollUpOnClick = debounce(scrollUp, DEBOUNCE_DELAY);
 
 const onDebouncedFormSubmit = (e) => {
   e.preventDefault();
-  // const target = e.target;
-  debouncedOnSearchMovies(e);
+  const target = e.target;
+  debouncedOnSearchMovies(target);
 };
 
 const onDebouncedHeaderLinkClick = (e) => {
@@ -114,17 +119,35 @@ const onDebouncedHeaderLinkClick = (e) => {
   debouncedHeaderLinkClick(target);
 };
 
-function initilizeListeners() {
+const onDebouncedFilterBtnClick = (e) => {
+  const target = e.target;
+  debouncedOnSearchMovies(target);
+};
+
+function initilizeRefs() {
+  let { nowPlaying, popular, topRated, upcoming } = filterButtonsRefs;
+  let { searchForm } = headerSearchRef;
+  let { scrollUpBtn } = scrollUpButtonRef;
+  let { homeLink, libraryLink, logoLink } = headerLinksRefs;
+  let { favorites, queque } = libraryButtonsRefs;
+
   homeLink.listenerFn = onDebouncedHeaderLinkClick;
   libraryLink.listenerFn = onDebouncedHeaderLinkClick;
   logoLink.listenerFn = onDebouncedHeaderLinkClick;
   searchForm.listenerFn = onDebouncedFormSubmit;
 
-  nowPlaying.listenerFn = debouncedOnSearchMovies;
-  popular.listenerFn = debouncedOnSearchMovies;
-  topRated.listenerFn = debouncedOnSearchMovies;
-  upcoming.listenerFn = debouncedOnSearchMovies;
+  nowPlaying.listenerFn = onDebouncedFilterBtnClick;
+  popular.listenerFn = onDebouncedFilterBtnClick;
+  topRated.listenerFn = onDebouncedFilterBtnClick;
+  upcoming.listenerFn = onDebouncedFilterBtnClick;
+
+  favorites.listenerFn = onDebouncedLibraryButtonClick;
+  queque.listenerFn = onDebouncedLibraryButtonClick;
+
   scrollUpBtn.listenerFn = debouncedScrollUpOnClick;
+
+  addEventListeners("click", getClickEventElements());
+  addEventListeners("submit", getSubmitEventElements());
 }
 
 window.addEventListener("scroll", debouncedGalleryWasScrolled);
@@ -135,23 +158,11 @@ function addEventListeners(eventType, elements) {
   });
 
   currentElements.forEach((item) => {
+    item.element.removeEventListener(eventType, item.listenerFn);
     item.element.addEventListener(eventType, item.listenerFn);
   });
 }
 
-function removeEventListeners(eventType, elements) {
-  const missingElements = elements.filter((item) => !item.element);
-  missingElements.forEach((item) =>
-    item.element.removeEventListener(eventType, item.listenerFn)
-  );
-  // console.log(missingElements);
-}
+initilizeRefs();
 
-initilizeListeners();
-console.log(homeLink);
-addEventListeners("click", getClickEventElements());
-addEventListeners("submit", getSubmitEventElements());
-// removeEventListeners("click", getClickEventElements());
-// removeEventListeners("submit", getSubmitEventElements());
-
-export { state, setState };
+export { state, setState, initilizeRefs };

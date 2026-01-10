@@ -1,3 +1,45 @@
-export function changePage(arg) {
-  console.log(arg);
+import Handlebars from "handlebars";
+import homeSectionFilters from "../partials/homeSectionFilters.hbs?raw";
+import librarySectionFilters from "../partials/librarySectionFilters.hbs?raw";
+import { state, initilizeRefs } from "../main";
+import { reloadRefs } from "./utils/refs";
+import { galleryMarkup } from "./galleryCreate";
+
+export const SECTIONS = {
+  homeLink: "homeLink",
+  libraryLink: "libraryLink",
+  logoLink: "logoLink",
+};
+
+export function changeSection(newSection) {
+  if (
+    state.currentSection === newSection ||
+    !Object.values(SECTIONS).includes(newSection)
+  )
+    return;
+  state.setCurrentSection(newSection);
+  loadCurrentSection();
+}
+
+const filterButtonsSection = document.querySelector(".filterButtonsSection");
+const homeSectionTemplate = Handlebars.compile(homeSectionFilters);
+const librarySectionTemplate = Handlebars.compile(librarySectionFilters);
+
+export function loadCurrentSection() {
+  const section = state.currentSection;
+  console.log(section);
+  if (!section) return;
+
+  if (section === SECTIONS.homeLink) {
+    filterButtonsSection.innerHTML = homeSectionTemplate();
+  }
+  if (section === SECTIONS.libraryLink) {
+    filterButtonsSection.innerHTML = librarySectionTemplate();
+  }
+  if (section === SECTIONS.logoLink) {
+    filterButtonsSection.innerHTML = "";
+  }
+
+  reloadRefs();
+  initilizeRefs();
 }

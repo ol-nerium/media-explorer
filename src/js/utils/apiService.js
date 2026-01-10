@@ -131,7 +131,9 @@ function getMovieById(movie_id) {
   return axios
     .get(`movie/${movie_id}`)
     .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .catch((e) => {
+      throw e;
+    });
 }
 
 function getKeywordIdByTitle(query, page) {

@@ -40,6 +40,7 @@ export function removeFromLS(newValue, key) {
 }
 
 export function getFromLS(key) {
+  // console.log(localStorage);
   return localStorage.getItem(key);
 }
 

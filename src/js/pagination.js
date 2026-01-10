@@ -1,5 +1,6 @@
 import { state } from "../main";
-import { galleryUpdate } from "./galleryCreate";
+import { galleryUpdate, isInfiniteScroll } from "./galleryCreate";
+import { scrollUp } from "./scrollInterface";
 const paginationRoot = document.getElementById("pagination");
 paginationRoot.addEventListener("click", paginationInterface);
 
@@ -32,13 +33,24 @@ function createPaginationMarkup() {
   }
   let resMarkup = resArr
     .map((i) => {
-      if (i === "...") return `<div class="pagEllipsis">${i}</div>`;
+      if (i === "...")
+        return `<div class="pageEllipsis">
+          <svg>
+            <use href="#ellipsis"></use>
+          </svg>
+      </div>`;
       else return `<button class="pagBtn" data-page=${i}>${i}</button>`;
     })
     .join("");
   const arrowMarkupObj = {
-    rightArrow: '<button class="rightArrow" data-control="right">-></button>',
-    leftArrow: '<button class="leftArrow" data-control="left"><-</button>',
+    rightArrow: `<button class="rightArrow" data-control="right">
+          <svg>
+            <use href="#arrow-right-circle"></use>
+          </svg></button>`,
+    leftArrow: `<button class="leftArrow" data-control="left">
+          <svg>
+            <use href="#arrow-left-circle"></use>
+          </svg></button>`,
   };
 
   resMarkup = arrowMarkupObj.leftArrow + resMarkup + arrowMarkupObj.rightArrow;
@@ -65,17 +77,29 @@ function paginationInterface(e) {
   const total_pages = Number(state.total_pages);
   const page = Number(state.page);
 
+  let target = e.target;
+  if (!target.dataset?.page) target = target.closest("[data-control]");
+
+  console.log(e.target, target);
+  // console.log(document.querySelector("[data-control]"));
+
   // classic early return if click not on pag btn
   // page libiting prevent bug here ( will be restricted by css too)
-  if (e.target.dataset.page) state.setPage(e.target.dataset.page);
+  if (target.dataset.page) state.setPage(target.dataset.page);
 
-  if (e.target.dataset.control === "left" && page > 1)
+  if (target.dataset.control === "left" && page > 1)
     state.setPage(Number(page) - 1);
-  if (e.target.dataset.control === "right" && page < total_pages)
+  if (target.dataset.control === "right" && page < total_pages)
     state.setPage(Number(page) + 1);
 
-  if (page !== Number(state.page) || total_pages !== Number(state.total_pages))
+  if (
+    page !== Number(state.page) ||
+    total_pages !== Number(state.total_pages)
+  ) {
+    isInfiniteScroll(false);
+    scrollUp();
     galleryUpdate(state);
+  }
 }
 
 export { createPaginationMarkup, paginationInterface };

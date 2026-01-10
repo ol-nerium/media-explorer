@@ -1,6 +1,6 @@
-* {
+/* * {
   outline: 1px solid white;
-}
+} */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,6 +15,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --accentColor: rgb(193, 154, 187);
+  --primaryColor: rgb(225, 225, 225);
+
+  --activeColor: rgb(209, 59, 59);
+  --inactiveColor: rgb(102, 102, 102);
 }
 
 *,
@@ -25,6 +31,24 @@
 
 li {
   list-style: none;
+}
+
+svg {
+  width: 40px;
+  height: 40px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  min-height: 100vh;
+  margin: 0;
+}
+
+footer {
+  margin-top: auto;
+  padding: 2rem;
 }
 
 ul,
@@ -43,7 +67,8 @@ img {
   display: block;
   width: 100%;
   height: 100%;
-  height: auto;
+  /* height: auto; */
+  object-fit: cover;
 }
 
 .container {
@@ -59,7 +84,7 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 2rem 2rem 0 2rem;
 }
 
 .logo {
@@ -81,13 +106,52 @@ img {
   width: 100%;
 }
 
+.logoLink svg,
+.logoLink use {
+  position: relative;
+  z-index: -1;
+  /* pointer-events: none; */
+}
+
+.logoLink {
+  color: currentColor;
+}
+.logoLink:hover {
+  color: var(--accentColor);
+}
+.navLink {
+  font-size: 2rem;
+  color: currentColor;
+  text-decoration: none;
+}
+.navLink:hover {
+  color: var(--accentColor);
+}
+
 .searchForm {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 80%;
   gap: 1rem;
   font-size: 2rem;
   margin-top: 2rem;
+  padding: 1rem;
+  height: 4rem;
+}
+.searchBtn {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  color: #fff;
+  /* height: 100%; */
+}
+
+.searchBtn svg {
+  display: block;
+  fill: currentColor;
+  /* height: 40px;
+  width: 40px; */
 }
 
 .searchForm input {
@@ -106,15 +170,26 @@ img {
 
 .navigation-list__item {
 }
+
 .navBtn {
   font-size: 2rem;
+}
+
+.rightArrow,
+.leftArrow {
+  min-width: 3rem;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
 }
 
 /* main */
 
 .main {
   width: 100%;
-  /* padding: 0 2rem; */
+  padding: 0 2rem;
+  /* position: relative; */
 }
 
 .filterButtonsSection {
@@ -165,10 +240,6 @@ img {
   /* flex-grow: 2;   */
 }
 
-img {
-  object-fit: cover;
-  height: 100%;
-}
 .gallery-item_genres {
   display: flex;
   justify-content: space-around;
@@ -179,11 +250,30 @@ img {
 
 /* pagination */
 .paginationBlock {
+  position: fixed;
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+  top: 100%;
+  left: 50%;
+
+  translate: -50% -140%;
+
+  min-width: fit-content;
 }
-.pagEllipsis {
+
+.paginationBlock button {
+  width: 3.25rem;
+}
+
+.paginationBlock svg,
+.paginationBlock use {
+  /* position: relative;
+  z-index: -1; */
+  /* pointer-events: none; */
+}
+.pageEllipsis {
+  fill: currentColor;
 }
 .pagBtn {
   font-size: 1.5rem;
@@ -449,7 +539,27 @@ img {
 
 .scrollup-btn {
   position: fixed;
-  top: 90%;
+  /* top: 90%;
   left: 90%;
-  translate: -100% -100%;
+  translate: -100% -100%; */
+
+  top: 80%;
+  left: 90%;
+  translate: -100% -50%;
+  background-color: transparent;
+  border: none;
+  /* width: 100%;
+  height: 100%; */
+  width: 5rem;
+  height: 5rem;
+}
+
+.scrollup-btn svg {
+  width: 100%;
+  height: 100%;
+  color: rgb(73, 94, 94);
+}
+
+.scrollup-btn :hover {
+  color: #fff;
 }

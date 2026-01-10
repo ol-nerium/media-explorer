@@ -13,7 +13,6 @@ Handlebars.registerHelper("genresGenerator", function (genreIds) {
 
 Handlebars.registerHelper("formatDate", function (date) {
   if (!date) {
-    console.log(date);
     return;
   }
   const newDate = format(date, "MM/yyyy");
