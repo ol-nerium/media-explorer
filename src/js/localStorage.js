@@ -92,6 +92,8 @@ export function setSavedToStorageFromLS(filterValue, libraryStorage) {
 
   try {
     const array = getFromLS(filterValue);
+    console.log(filterValue);
+    console.log(libraryStorage, libraryStorage[filterValue]);
     const perPage = libraryStorage[filterValue].perPage;
     const parsedArray = JSON.parse(array);
     if (!parsedArray) return;

@@ -1,3 +1,5 @@
+import { setState, state } from "../main";
+import { galleryMarkup } from "./galleryCreate";
 import {
   getFromLS,
   rewriteKeyCompletelyInLS,
@@ -6,14 +8,14 @@ import {
 import { fetchResultsByIds } from "./utils/apiService";
 
 const libraryStorage = {
-  Favorites: {
+  favorites: {
     pages_ids_array: [],
     total_pages: 1,
     total_results: 0,
     perPage: 20,
     fetchedData: [],
   },
-  Queque: {
+  queque: {
     pages_ids_array: [],
     total_pages: 1,
     total_results: 0,
@@ -22,23 +24,66 @@ const libraryStorage = {
   },
 };
 
-export function fetchPageWithResults(filterValue, page) {
+export function fetchPageWithResults(page, filterValue) {
   setSavedToStorageFromLS(filterValue, libraryStorage);
   const currentIdsArray = libraryStorage[filterValue].pages_ids_array[page - 1];
-  if (!currentIdsArray) return;
-  // const fetchArray = currentIdsArray.map((id) => getMovieById(id));
-  // Promise.allSettled(fetchArray)
 
-  fetchResultsByIds(currentIdsArray).then((res) => {
-    const result = processResults(res, page, filterValue);
-    console.log(result, libraryStorage);
-    // 1. set state
-    // 2.
-    // render result?
-  });
+  if (!currentIdsArray) {
+    console.log("no results, needs indication");
+    return new Promise((resolve, reject) => {
+      reject("no results, needs indication");
+    });
+  }
+
+  return fetchResultsByIds(currentIdsArray)
+    .then((res) => {
+      processResults(res, page, filterValue);
+    })
+    .then(() => {
+      const {
+        pages_ids_array,
+        total_pages,
+        total_results,
+        perPage,
+        fetchedData,
+      } = libraryStorage[filterValue];
+
+      // 0. format data for gallery
+      const gallaryItems = fetchedData[page - 1].map((item) => {
+        return {
+          adult: item.adult,
+          backdrop_path: item.backdrop_path,
+          id: item.id,
+          genre_ids: item.genres.map((item) => item.id),
+          original_language: item.original_language,
+          original_title: item.original_title,
+          overview: item.overview,
+          popularity: item.popularity,
+          poster_path: item.poster_path,
+          release_date: item.release_date,
+          title: item.title,
+          video: item.video,
+          vote_average: item.vote_average,
+          vote_count: item.vote_count,
+        };
+      });
+
+      // 1. set state
+      const response = {
+        page,
+        results: gallaryItems,
+        total_pages,
+        total_results,
+        // filter: filterValue,
+      };
+
+      return new Promise((resolve, reject) => {
+        resolve(response);
+      });
+    });
 }
 
-let resSucceed = { Favorites: [], Queque: [] };
+let resSucceed = { favorites: [], queque: [] };
 let nextIdsArray = [];
 function processResults(res, page, filterValue) {
   const succeed = []; // fetched results
@@ -87,7 +132,7 @@ function processResults(res, page, filterValue) {
     (item) => !clippedfromNextArray.includes(item)
   ); // remove new testing ids from next pages flattened array
 
-  // console.log(currentIdsArray, nextIdsArray);
+  console.log(currentIdsArray, nextIdsArray);
   libraryStorage[filterValue].pages_ids_array = [
     ...libraryStorage[filterValue].pages_ids_array.slice(0, page),
     nextIdsArray,

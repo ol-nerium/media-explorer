@@ -36,9 +36,9 @@ export function modalOpen(e) {
       backdropRoot = modalRoot.querySelector(".backdrop");
       closeModalBtn = modalRoot.querySelector(".closeModal-btn");
 
-      addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="Queque"]');
+      addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
       addToFavoritesBtn = modalRoot.querySelector(
-        '[data-modalbtn="Favorites"]'
+        '[data-modalbtn="favorites"]'
       );
 
       window.addEventListener("keydown", handleEscapeKey);

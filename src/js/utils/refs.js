@@ -37,12 +37,12 @@ const getFilterButtons = () => {
 const getLibraryButtons = () => {
   return {
     favorites: {
-      element: document.querySelector('[data-filter="Favorites"]'),
+      element: document.querySelector('[data-filter="favorites"]'),
       fetchFn: null,
       listenerFn: null,
     },
     queque: {
-      element: document.querySelector('[data-filter="Queque"]'),
+      element: document.querySelector('[data-filter="queque"]'),
       fetchFn: null,
       listenerFn: null,
     },

@@ -22,6 +22,8 @@ export function changeSection(newSection) {
 }
 
 const filterButtonsSection = document.querySelector(".filterButtonsSection");
+const galleryRoot = document.getElementById("gallery");
+const paginationRoot = document.getElementById("pagination");
 const homeSectionTemplate = Handlebars.compile(homeSectionFilters);
 const librarySectionTemplate = Handlebars.compile(librarySectionFilters);
 
@@ -39,7 +41,8 @@ export function loadCurrentSection() {
   if (section === SECTIONS.logoLink) {
     filterButtonsSection.innerHTML = "";
   }
-
+  galleryRoot.innerHTML = "";
+  paginationRoot.innerHTML = "";
   reloadRefs();
   initilizeRefs();
 }

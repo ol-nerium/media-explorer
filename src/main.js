@@ -92,17 +92,16 @@ const debouncedGalleryWasScrolled = debounce(
   infiniteScrollInitiate,
   DEBOUNCE_DELAY
 );
-const debouncedLibraryButtonClick = debounce(
-  fetchPageWithResults,
-  DEBOUNCE_DELAY
-);
+// const debouncedLibraryButtonClick = debounce(
+//   fetchPageWithResults,
+//   DEBOUNCE_DELAY
+// );
 
-const onDebouncedLibraryButtonClick = (e) => {
-  const filterValue = e.target.dataset?.filter;
-  if (!filterValue) return;
-  debouncedLibraryButtonClick(filterValue, 1);
-  // filterValue, page;
-};
+// const onDebouncedLibraryButtonClick = (e) => {
+//   const filterValue = e.target.dataset?.filter;
+//   if (!filterValue) return;
+//   debouncedLibraryButtonClick(1, filterValue);
+// };
 
 const debouncedHeaderLinkClick = debounce(headerLinkClick, DEBOUNCE_DELAY);
 const debouncedScrollUpOnClick = debounce(scrollUp, DEBOUNCE_DELAY);
@@ -141,8 +140,8 @@ function initilizeRefs() {
   topRated.listenerFn = onDebouncedFilterBtnClick;
   upcoming.listenerFn = onDebouncedFilterBtnClick;
 
-  favorites.listenerFn = onDebouncedLibraryButtonClick;
-  queque.listenerFn = onDebouncedLibraryButtonClick;
+  favorites.listenerFn = onDebouncedFilterBtnClick;
+  queque.listenerFn = onDebouncedFilterBtnClick;
 
   scrollUpBtn.listenerFn = debouncedScrollUpOnClick;
 
