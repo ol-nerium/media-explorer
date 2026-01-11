@@ -132,7 +132,6 @@ function processResults(res, page, filterValue) {
     (item) => !clippedfromNextArray.includes(item)
   ); // remove new testing ids from next pages flattened array
 
-  console.log(currentIdsArray, nextIdsArray);
   libraryStorage[filterValue].pages_ids_array = [
     ...libraryStorage[filterValue].pages_ids_array.slice(0, page),
     nextIdsArray,

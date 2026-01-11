@@ -1,6 +1,6 @@
-/* * {
+* {
   outline: 1px solid white;
-} */
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -523,11 +523,22 @@ img {
   z-index: 111;
   border-radius: 50% 50%;
   aspect-ratio: 1/1;
-  width: 2.5rem;
-  font-size: 2rem;
   top: 0;
   left: 85%;
-  translate: 0 100%;
+  translate: 0 50%;
+  border: none;
+  background-color: transparent;
+  /* filter:  */
+  padding: 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeModal-btn svg {
+  width: 1.7rem;
+  height: 1.7rem;
 }
 
 .removeItem {
@@ -552,6 +563,28 @@ img {
   height: 100%; */
   width: 5rem;
   height: 5rem;
+}
+
+.modalcontrol-btn {
+  position: absolute;
+  top: 50%;
+  background-color: transparent;
+  border: none;
+}
+
+.modalcontrol-btn svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.modalcontrol-btn.controlRight {
+  left: 90%;
+  translate: -100% -50%;
+}
+
+.modalcontrol-btn.controlLeft {
+  left: 10%;
+  translate: 0 -50%;
 }
 
 .scrollup-btn svg {

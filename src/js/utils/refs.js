@@ -110,7 +110,6 @@ export function reloadRefs() {
 }
 
 function getClickEventElements() {
-  // console.log(filterButtonsRefs, Object.values(filterButtonsRefs));
   return [
     ...Object.values(headerLinksRefs),
     ...Object.values(filterButtonsRefs),

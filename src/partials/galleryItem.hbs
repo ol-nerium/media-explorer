@@ -6,9 +6,19 @@
       alt="film-poster"
     />
   {{/if}}
-</div>
 
-<button class="closeModal-btn">x</button>
+</div>
+<button class="modalcontrol-btn controlRight" data-modalcontrol="right"><svg>
+    <use href="#arrow-right-circle"></use>
+  </svg></button>
+<button class="modalcontrol-btn controlLeft" data-modalcontrol="left"><svg>
+    <use href="#arrow-left-circle"></use>
+  </svg></button>
+<button class="closeModal-btn" data-modalcontrol="close">
+  <svg>
+    <use href="#icon-cross-close"></use>
+  </svg>
+</button>
 <div class="modalLayout">
 
   <div class="modalContent" data-id={{id}}>
@@ -107,7 +117,7 @@
 
         {{#if production_countries}}
           <div class="production-countries">
-            <h3 class="production-title"> Production contry:</h3>
+            <h3 class="production-title"> Production country:</h3>
 
             <ul class="productionCountry-list">
               {{#each production_countries}}

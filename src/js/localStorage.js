@@ -1,12 +1,13 @@
+import { removeDubles } from "../main";
+
 let storedInLS = {};
 
 export function saveToLS(value, key) {
-  console.log(storedInLS);
   try {
-    console.log(getFromLS(key));
-
     let currentStorageArray = JSON.parse(getFromLS(key));
-    const newValue = value.toString();
+    // const newValue = value.toString();
+    const newValue = Number(value);
+
     let sterializedValue;
 
     if (!currentStorageArray) {
@@ -46,23 +47,12 @@ export function getFromLS(key) {
   return localStorage.getItem(key);
 }
 
-function removeDubles(array) {
-  let resArr = [];
-
-  array.forEach((item) => {
-    if (!resArr.includes(item)) resArr.push(item);
-  });
-
-  return resArr;
-}
-
 export function isRecordStoredInLS(value, key) {
   try {
     const array = JSON.parse(localStorage.getItem(key));
-    const stringedValue = value.toString();
+    // const stringedValue = value.toString();
     if (!!array) {
-      storedInLS[key] = array.includes(stringedValue);
-      console.log(storedInLS[key]);
+      storedInLS[key] = array.includes(Number(value));
       return storedInLS[key];
     } else {
       storedInLS[key] = false;
@@ -92,8 +82,6 @@ export function setSavedToStorageFromLS(filterValue, libraryStorage) {
 
   try {
     const array = getFromLS(filterValue);
-    console.log(filterValue);
-    console.log(libraryStorage, libraryStorage[filterValue]);
     const perPage = libraryStorage[filterValue].perPage;
     const parsedArray = JSON.parse(array);
     if (!parsedArray) return;

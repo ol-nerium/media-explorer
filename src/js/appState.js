@@ -1,5 +1,6 @@
 import { getGenresList as fetchGenresList } from "./utils/apiService";
 import { SECTIONS } from "./pageRouting";
+import { removeDubles } from "../main";
 
 const STATUS = {
   IDLE: "idle",
@@ -21,11 +22,21 @@ class State {
     this.status = STATUS.IDLE;
 
     this.modal = null;
+    this.allGalleryIds = [];
 
     this.currentSection = SECTIONS.homeLink;
   }
   updateGenresList() {
     fetchGenresList().then((res) => (this.genresList = res.genres));
+  }
+
+  addItemsGalleryIds(idsArr) {
+    this.allGalleryIds.push(...idsArr);
+    this.allGalleryIds = removeDubles(this.allGalleryIds);
+  }
+
+  clearGalleryIds() {
+    this.allGalleryIds = [];
   }
 
   setCurrentSection(currentSection) {

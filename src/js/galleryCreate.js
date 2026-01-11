@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
 import gallery from "../partials/gallery.hbs?raw";
-import { setState } from "../main";
+import { setState, state } from "../main";
 import { createPaginationMarkup } from "./pagination";
 // import { getFilterButtons, getHeaderSearchForm } from "./utils/refs";
 import {
@@ -26,9 +26,12 @@ export function galleryMarkup(array) {
 
   const html = template({ movies: array });
   if (firstLoad || !infiniteScroll) {
+    console.log("first load or !infinite scroll");
     galleryRoot.innerHTML = html;
+    state.clearGalleryIds();
   } else galleryRoot.innerHTML += html;
 
+  state.addItemsGalleryIds(state.currentResults.map((item) => item.id));
   createPaginationMarkup();
 
   firstLoad = false;
@@ -40,10 +43,7 @@ export async function galleryUpdate(state) {
   let currentApiFunction;
   let currentSearchValue;
 
-  console.log(currentSearchFilter);
-
   if (currentSection === SECTIONS.libraryLink) {
-    console.log(state);
     currentApiFunction = fetchPageWithResults;
     currentSearchValue = { filter: currentSearchFilter };
     console.log("search by filter on library section");
@@ -66,8 +66,7 @@ export async function galleryUpdate(state) {
   currentApiFunction(page, ...Object.values(currentSearchValue))
     .then((res) => {
       setState({ ...res, ...currentSearchValue });
-      console.log(res);
-      console.log(state);
+
       galleryMarkup(state.currentResults);
       firstLoad = false;
 

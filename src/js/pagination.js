@@ -80,8 +80,6 @@ function paginationInterface(e) {
   let target = e.target;
   if (!target.dataset?.page) target = target.closest("[data-control]");
 
-  // console.log(document.querySelector("[data-control]"));
-
   // classic early return if click not on pag btn
   // page libiting prevent bug here ( will be restricted by css too)
   if (target.dataset.page) state.setPage(target.dataset.page);

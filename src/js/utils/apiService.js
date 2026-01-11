@@ -24,7 +24,6 @@ axios.defaults.headers = {
 function getMoviesByFilters(params) {
   // Find movies using over 30 filters and sort options.
   // main searching request for compilations i guess
-  console.log(params, "params here i dunno what this is advanced search");
 
   return axios
     .get("discover/movie")
@@ -157,7 +156,6 @@ function getMovieByTitle(page = 1, query) {
       `search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`
     )
     .then((res) => res.data);
-  // .catch((e) => console.log(e));
 }
 
 function fetchResultsByIds(idsArr) {

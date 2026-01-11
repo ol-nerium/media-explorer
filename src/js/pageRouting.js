@@ -29,7 +29,6 @@ const librarySectionTemplate = Handlebars.compile(librarySectionFilters);
 
 export function loadCurrentSection() {
   const section = state.currentSection;
-  console.log(section);
   if (!section) return;
 
   if (section === SECTIONS.homeLink) {
@@ -43,6 +42,8 @@ export function loadCurrentSection() {
   }
   galleryRoot.innerHTML = "";
   paginationRoot.innerHTML = "";
+  state.clearGalleryIds();
+
   reloadRefs();
   initilizeRefs();
 }

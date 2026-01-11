@@ -52,6 +52,7 @@ const onSearchMovies = (target) => {
       console.log(' "indicate empty input" ');
       return;
     }
+
     state.setSearchQuery(query);
     state.setPage(1);
     state.setCurrentSearchFilter(null);
@@ -64,6 +65,7 @@ const onSearchMovies = (target) => {
   }
 
   isFirstLoad(true);
+  state.clearGalleryIds();
   galleryUpdate(state);
 };
 
@@ -92,16 +94,6 @@ const debouncedGalleryWasScrolled = debounce(
   infiniteScrollInitiate,
   DEBOUNCE_DELAY
 );
-// const debouncedLibraryButtonClick = debounce(
-//   fetchPageWithResults,
-//   DEBOUNCE_DELAY
-// );
-
-// const onDebouncedLibraryButtonClick = (e) => {
-//   const filterValue = e.target.dataset?.filter;
-//   if (!filterValue) return;
-//   debouncedLibraryButtonClick(1, filterValue);
-// };
 
 const debouncedHeaderLinkClick = debounce(headerLinkClick, DEBOUNCE_DELAY);
 const debouncedScrollUpOnClick = debounce(scrollUp, DEBOUNCE_DELAY);
@@ -162,6 +154,16 @@ function addEventListeners(eventType, elements) {
   });
 }
 
+function removeDubles(array) {
+  let resArr = [];
+
+  array.forEach((item) => {
+    if (!resArr.includes(item)) resArr.push(item);
+  });
+  console.log(array);
+  return resArr;
+}
+
 initilizeRefs();
 
-export { state, setState, initilizeRefs };
+export { state, setState, initilizeRefs, removeDubles };
