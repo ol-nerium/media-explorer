@@ -110,3 +110,21 @@
 //     name: "Western",
 //   },
 //   ];
+
+// const success = (res) => {
+//   console.log(res);
+// };
+// const error = (e) => {
+//   console.log(e);
+//   console.log(e.status);
+//   if (Number(e.status) === 404) {
+//     console.log(
+//       "error 404: removing id " +
+//         currentIdsArray[0] +
+//         "from LS key " +
+//         filterValue
+//     );
+//     removeFromLS(currentIdsArray[0], filterValue);
+//     refreshSavedRecords(filterValue);
+//   }
+// };

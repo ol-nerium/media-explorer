@@ -1,8 +1,11 @@
-let storedInLS = false;
+let storedInLS = {};
 
 export function saveToLS(value, key) {
+  console.log(storedInLS);
   try {
-    const currentStorageArray = JSON.parse(getFromLS(key));
+    console.log(getFromLS(key));
+
+    let currentStorageArray = JSON.parse(getFromLS(key));
     const newValue = value.toString();
     let sterializedValue;
 
@@ -17,8 +20,8 @@ export function saveToLS(value, key) {
 
     // decide if remove or add to/from LS
     isRecordStoredInLS(newValue, key);
-    if (storedInLS) removeFromLS(newValue, key);
-    if (!storedInLS) localStorage.setItem(key, sterializedValue);
+    if (storedInLS[key]) removeFromLS(newValue, key);
+    if (!storedInLS[key]) localStorage.setItem(key, sterializedValue);
   } catch (error) {
     throw error;
   }
@@ -40,7 +43,6 @@ export function removeFromLS(newValue, key) {
 }
 
 export function getFromLS(key) {
-  // console.log(localStorage);
   return localStorage.getItem(key);
 }
 
@@ -59,10 +61,52 @@ export function isRecordStoredInLS(value, key) {
     const array = JSON.parse(localStorage.getItem(key));
     const stringedValue = value.toString();
     if (!!array) {
-      storedInLS = array.includes(stringedValue);
-      return storedInLS;
+      storedInLS[key] = array.includes(stringedValue);
+      console.log(storedInLS[key]);
+      return storedInLS[key];
+    } else {
+      storedInLS[key] = false;
+      return storedInLS[key];
     }
   } catch (error) {
     throw error;
+  }
+}
+
+export function rewriteKeyCompletelyInLS(key, newValue) {
+  try {
+    const sterializedValue = JSON.stringify(newValue);
+    localStorage.setItem(key, sterializedValue);
+  } catch (error) {
+    console.log("error setting key value to LS");
+    throw error;
+  }
+}
+
+// load ids from LS
+// count pages, make arrays with pages lists
+export function setSavedToStorageFromLS(filterValue, libraryStorage) {
+  let total_results;
+  let total_pages;
+  const resArr = [];
+
+  try {
+    const array = getFromLS(filterValue);
+    const perPage = libraryStorage[filterValue].perPage;
+    const parsedArray = JSON.parse(array);
+    if (!parsedArray) return;
+    total_results = parsedArray.length;
+    total_pages = Math.ceil(total_results / perPage);
+
+    for (let i = 1; i <= total_pages; i += 1) {
+      resArr.push(parsedArray.slice((i - 1) * perPage, i * perPage));
+    }
+
+    libraryStorage[filterValue].pages_ids_array = resArr;
+    libraryStorage[filterValue].total_pages = total_pages;
+    libraryStorage[filterValue].total_results = total_results;
+  } catch (e) {
+    console.log("something gone wrong when getting results from LS in library");
+    throw e;
   }
 }

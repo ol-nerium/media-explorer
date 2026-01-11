@@ -160,6 +160,11 @@ function getMovieByTitle(page = 1, query) {
   // .catch((e) => console.log(e));
 }
 
+function fetchResultsByIds(idsArr) {
+  const fetchArray = idsArr.map((item) => getMovieById(item));
+  return Promise.allSettled(fetchArray);
+}
+
 // Get the rating, watchlist and favourite status of an account. https://api.themoviedb.org/3/movie/{movie_id}/account_states
 // Get the alternative titles for a movie. https://api.themoviedb.org/3/movie/{movie_id}/alternative_titles
 // Get the recent changes for a movie. https://api.themoviedb.org/3/movie/{movie_id}/changes
@@ -184,4 +189,5 @@ export {
   getMovieById,
   getKeywordIdByTitle,
   getMovieByTitle,
+  fetchResultsByIds,
 };

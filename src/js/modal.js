@@ -53,7 +53,6 @@ export function modalOpen(e) {
     })
     .catch((e) => {
       throw e;
-      console.log("error", e.message);
     });
 }
 

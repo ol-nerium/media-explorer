@@ -1,14 +1,17 @@
-import { getFromLS, removeFromLS } from "./localStorage";
-import { getMovieById } from "./utils/apiService";
+import {
+  getFromLS,
+  rewriteKeyCompletelyInLS,
+  setSavedToStorageFromLS,
+} from "./localStorage";
+import { fetchResultsByIds } from "./utils/apiService";
 
-const storageIds = {
+const libraryStorage = {
   Favorites: {
     pages_ids_array: [],
     total_pages: 1,
     total_results: 0,
     perPage: 20,
     fetchedData: [],
-    // fetchedData: [ {page:1, results:[{filmObj1, filmObj2...}, ...]
   },
   Queque: {
     pages_ids_array: [],
@@ -16,136 +19,84 @@ const storageIds = {
     total_results: 0,
     perPage: 20,
     fetchedData: [],
-    // fetchedData: [ {page:1, results:[{filmObj1, filmObj2...}, ...]
   },
 };
 
-// load ids from LS
-// count pages, make arrays with pages lists(?)
-export function refreshSavedRecords(filterValue) {
-  // const filterValue = e.target.dataset?.filter;
-  // if (!filterValue) return;
-
-  let total_results;
-  let total_pages;
-  // let page = 1;
-  const resArr = [];
-
-  try {
-    const array = getFromLS(filterValue);
-    const perPage = storageIds[filterValue].perPage;
-    const parsedArray = JSON.parse(array);
-
-    total_results = parsedArray.length;
-    total_pages = Math.round(total_results / perPage);
-    // console.log(total_results, total_pages, filterValue);
-
-    for (let i = 1; i <= total_pages; i += 1) {
-      resArr.push(parsedArray.slice((i - 1) * perPage, i * perPage));
-      console.log(parsedArray.slice((i - 1) * perPage, i * perPage));
-    }
-    storageIds[filterValue].pages_ids_array = resArr;
-    storageIds[filterValue].total_pages = total_pages;
-    storageIds[filterValue].total_results = total_results;
-    // storageIds[filterValue].pages_ids_array = resArr;
-    // storageIds[filterValue].pages_ids_array = resArr;
-
-    // fetchPageWithResults(filterValue, page);
-    console.log(resArr);
-  } catch (e) {
-    console.log("something gone wrong when getting results from LS in library");
-    throw e;
-  }
-}
-
-// fetchPageWithResults(filterValue, page);
-
 export function fetchPageWithResults(filterValue, page) {
-  // console.log(filterValue, storageIds[filterValue]);
-  // refreshSavedRecords(filterValue);
-  const currentIdsArray = storageIds[filterValue].pages_ids_array[page - 1];
-  console.log(storageIds[filterValue].pages_ids_array);
-  // const success = (res) => {
-  //   console.log(res);
-  // };
-  // const error = (e) => {
-  //   console.log(e);
-  //   console.log(e.status);
-  //   if (Number(e.status) === 404) {
-  //     console.log(
-  //       "error 404: removing id " +
-  //         currentIdsArray[0] +
-  //         "from LS key " +
-  //         filterValue
-  //     );
-  //     removeFromLS(currentIdsArray[0], filterValue);
-  //     refreshSavedRecords(filterValue);
-  //   }
-  // };
+  setSavedToStorageFromLS(filterValue, libraryStorage);
+  const currentIdsArray = libraryStorage[filterValue].pages_ids_array[page - 1];
+  if (!currentIdsArray) return;
+  // const fetchArray = currentIdsArray.map((id) => getMovieById(id));
+  // Promise.allSettled(fetchArray)
 
-  const fetchArray = currentIdsArray.map((item) => getMovieById(item));
-  return Promise.allSettled(fetchArray).then((res) =>
-    processResults(res, page, filterValue)
-  );
-
-  // getMovieById(id);
-
-  // if resFetchedArray<perPage => not all promises were successful => try again?
-  // not try or try and error again => load next page elements that missed to 20pt
-  // remove failed ids from LS => rewrite library state =>
-  // load missing
+  fetchResultsByIds(currentIdsArray).then((res) => {
+    const result = processResults(res, page, filterValue);
+    console.log(result, libraryStorage);
+    // 1. set state
+    // 2.
+    // render result?
+  });
 }
 
-// fetch info accordinly to ids, if there any failed fetching signalize about error
-// (maybe remove failed ids from LS if film is missing on api side?)
-// write results to state
-// choosing page depends on current info
-
-let resSucceed = [];
-function fetchResultsByIds(idsArr, page, filterValue) {
-  const fetchArray = idsArr.map((item) => getMovieById(item));
-  Promise.allSettled(fetchArray).then((res) =>
-    processResults(res, page, filterValue)
-  );
-}
+let resSucceed = { Favorites: [], Queque: [] };
+let nextIdsArray = [];
 function processResults(res, page, filterValue) {
-  const succeed = [];
-  const failed = [];
-  const currentIdsArray = storageIds[filterValue].pages_ids_array[page - 1];
+  const succeed = []; // fetched results
+  const failed = []; // error messages array
+  let currentIdsArray = libraryStorage[filterValue].pages_ids_array[page - 1]; // current page array
+
   res.forEach((item) => {
     if (item.status === "fulfilled") succeed.push(item.value);
-    if (item.status === "rejected") failed.push(item.value);
+    if (item.status === "rejected") failed.push(item.reason.message);
   });
 
-  if (failed.length === 0 || page >= storageIds[filterValue].total_pages) {
-    resSucceed.push(...succeed);
-    console.log(resSucceed);
-    storageIds[filterValue].fetchedData[page - 1] = resSucceed;
-    // storageIds[filterValue].pages_ids_array[page - 1] = resSucceed;
-    console.log(storageIds[filterValue].pages_ids_array);
-    resSucceed = [];
-    return storageIds[filterValue].fetchedData[page - 1];
+  if (failed.length === 0 || page >= libraryStorage[filterValue].total_pages) {
+    libraryStorage[filterValue].fetchedData[page - 1] = [
+      ...resSucceed[filterValue],
+      ...succeed,
+    ];
+    libraryStorage[filterValue].pages_ids_array[page - 1] = libraryStorage[
+      filterValue
+    ].fetchedData[page - 1].map((item) => item.id);
+
+    const flatArray = libraryStorage[filterValue].pages_ids_array.flatMap(
+      (item) => item
+    );
+    rewriteKeyCompletelyInLS(filterValue, flatArray);
+
+    resSucceed[filterValue] = [];
+    setSavedToStorageFromLS(filterValue, libraryStorage);
+    return libraryStorage[filterValue].fetchedData[page - 1];
   }
 
-  const nextIdsArray = storageIds[filterValue].pages_ids_array[page];
+  currentIdsArray = currentIdsArray.filter((item) =>
+    succeed.map((item) => item.id).includes(item)
+  );
+  libraryStorage[filterValue].pages_ids_array[page - 1] = currentIdsArray; // removes failed results from current libraryStorage page.
 
-  console.log(currentIdsArray);
-  storageIds[filterValue].pages_ids_array[page - 1] = currentIdsArray.filter(
-    (item) => succeed.includes(item)
-  ); // removes failed results from current storageIds page
+  const failedResultsAmount = failed.length; // count failed ids from current test array
 
-  // console.log(storageIds[filterValue].pages_ids_array[page - 1]);
+  nextIdsArray = libraryStorage[filterValue].pages_ids_array
+    .slice(page)
+    .flatMap((item) => item);
+  // take all next after current page ids
 
-  const failedResultsAmount = failed.length;
-  const nextArray = storageIds[filterValue].pages_ids_array[page];
-  const clippedfromNextArray = nextArray.slice(0, failedResultsAmount);
-  storageIds[filterValue].pages_ids_array[page] = nextIdsArray.slice(
-    failedResultsAmount - 1
-  ); // removes next tested elements from the next storageIds page
-  // needs check if elements in next page is enough otherwise increase page number/remove page
+  const clippedfromNextArray = nextIdsArray.slice(0, failedResultsAmount);
+  // and take missing in current page ids from nextIdsArray
+  nextIdsArray = nextIdsArray.filter(
+    (item) => !clippedfromNextArray.includes(item)
+  ); // remove new testing ids from next pages flattened array
 
-  fetchResultsByIds(clippedfromNextArray, page, filterValue);
+  // console.log(currentIdsArray, nextIdsArray);
+  libraryStorage[filterValue].pages_ids_array = [
+    ...libraryStorage[filterValue].pages_ids_array.slice(0, page),
+    nextIdsArray,
+  ]; // add all next ids to one next page
 
-  resSucceed.push(...succeed);
+  fetchResultsByIds(clippedfromNextArray, page, filterValue).then((res) =>
+    processResults(res, page, filterValue)
+  );
+
+  resSucceed[filterValue].push(...succeed);
   // return succeed;
 }
