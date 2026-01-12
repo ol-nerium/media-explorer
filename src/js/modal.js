@@ -3,6 +3,10 @@ import { getMovieById } from "./utils/apiService";
 import { state } from "../main";
 import galleryItem from "../partials/galleryItem.hbs?raw";
 import { isRecordStoredInLS, saveToLS } from "./localStorage";
+import {
+  modalButtonsClassContentWork,
+  modalVisibilityClassWork,
+} from "./utils/classWork";
 
 const template = Handlebars.compile(galleryItem);
 const modalRoot = document.getElementById("modal");
@@ -23,12 +27,7 @@ export function modalOpen(e) {
       window.addEventListener("keydown", modalGalleryKeyControls);
       modalRoot.addEventListener("click", modalGalleryClickControls);
 
-      if (
-        modalRoot.classList.contains("isClosed") &&
-        !modalRoot.classList.contains("isOpened")
-      ) {
-        modalRoot.classList.replace("isClosed", "isOpened");
-      }
+      modalVisibilityClassWork("open");
     })
     .catch((e) => {
       throw e;
@@ -43,14 +42,7 @@ function modalClose() {
   window.removeEventListener("keydown", modalGalleryKeyControls);
   modalRoot.removeEventListener("click", modalGalleryClickControls);
 
-  if (!state.modal) {
-    if (
-      !modalRoot.classList.contains("isClosed") &&
-      modalRoot.classList.contains("isOpened")
-    ) {
-      modalRoot.classList.replace("isOpened", "isClosed");
-    }
-  }
+  modalVisibilityClassWork("close");
 
   window.removeEventListener("keydown", handleEscapeKey);
   backdropRoot.removeEventListener("click", onBackdropClick);
@@ -72,14 +64,12 @@ function modalRender(res) {
   addToQuequeBtn.removeEventListener("click", onClickmodalButton);
   addToFavoritesBtn.removeEventListener("click", onClickmodalButton);
 
-  // modalRoot.classList.contains("isClosed");
-
   backdropRoot.addEventListener("click", onBackdropClick);
   addToQuequeBtn.addEventListener("click", onClickmodalButton);
   addToFavoritesBtn.addEventListener("click", onClickmodalButton);
 
-  checkItemInLS(addToQuequeBtn, res.id);
-  checkItemInLS(addToFavoritesBtn, res.id);
+  changeButtonContent(addToQuequeBtn, res.id);
+  changeButtonContent(addToFavoritesBtn, res.id);
 }
 
 function onBackdropClick(e) {
@@ -96,23 +86,15 @@ function onClickmodalButton(e) {
   const value = state.modal.id;
 
   saveToLS(value, key);
-  checkItemInLS(e.target, value);
+  changeButtonContent(e.target, value);
 }
 
-function checkItemInLS(btn, id) {
+function changeButtonContent(btn, id) {
   //addToQuequeBtn.dataset.modalbtn; // key
   //addToFavoritesBtn.dataset.modalbtn; //key
   // value=id //
-
-  if (isRecordStoredInLS(id, btn.dataset.modalbtn)) {
-    btn.classList.remove("addItem");
-    btn.classList.add("removeItem");
-    btn.textContent = "Remove from " + [btn.dataset.modalbtn];
-  } else {
-    btn.classList.remove("removeItem");
-    btn.classList.add("addItem");
-    btn.textContent = "Add to " + [btn.dataset.modalbtn];
-  }
+  const isInLS = isRecordStoredInLS(id, btn.dataset.modalbtn);
+  modalButtonsClassContentWork(isInLS, btn);
 }
 
 function modalGalleryKeyControls(e) {
@@ -134,11 +116,6 @@ function modalGalleryClickControls(e) {
   }
   if (target.dataset.modalcontrol === "close") modalClose();
 }
-
-// function fetchResultsByIds(idsArr) {
-//   const fetchArray = idsArr.map((item) => getMovieById(item));
-//   return Promise.allSettled(fetchArray);
-// }
 
 function galleryScroll(direction) {
   const galleryArray = state.allGalleryIds;

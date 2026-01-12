@@ -3,7 +3,7 @@ import homeSectionFilters from "../partials/homeSectionFilters.hbs?raw";
 import librarySectionFilters from "../partials/librarySectionFilters.hbs?raw";
 import { state, initilizeRefs } from "../main";
 import { reloadRefs } from "./utils/refs";
-import { galleryMarkup } from "./galleryCreate";
+import { sectionRoutingClassWork } from "./utils/classWork";
 
 export const SECTIONS = {
   homeLink: "homeLink",
@@ -39,6 +39,8 @@ export function loadCurrentSection() {
     galleryRoot.insertAdjacentHTML("beforebegin", homeSectionTemplate());
 
     galleryRoot.style.display = "flex";
+
+    sectionRoutingClassWork();
   }
   if (section === SECTIONS.libraryLink) {
     // searchSection = document.querySelector(".searchSection");
@@ -46,17 +48,21 @@ export function loadCurrentSection() {
     galleryRoot.insertAdjacentHTML("beforebegin", librarySectionTemplate());
 
     galleryRoot.style.display = "flex";
+
+    sectionRoutingClassWork();
   }
 
   if (section === SECTIONS.logoLink) {
     searchSection.style.display = "none";
     galleryRoot.style.display = "none";
+
+    sectionRoutingClassWork();
   }
 
   galleryRoot.innerHTML = "";
   if (paginationRoot) paginationRoot.innerHTML = "";
-  state.clearGalleryIds();
 
+  state.clearGalleryIds();
   reloadRefs();
   initilizeRefs();
 }

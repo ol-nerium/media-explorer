@@ -20,7 +20,7 @@ import {
 import { State } from "./js/appState";
 import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
 import { changeSection } from "./js/pageRouting";
-import { fetchPageWithResults } from "./js/libraryButtonsInterface";
+import { sectionRoutingClassWork } from "./js/utils/classWork";
 
 const state = new State();
 state.updateGenresList();
@@ -65,7 +65,6 @@ const onSearchMovies = (target) => {
   }
 
   isFirstLoad(true);
-  state.clearGalleryIds();
   galleryUpdate(state);
 };
 
@@ -125,6 +124,7 @@ function initilizeRefs() {
   homeLink.listenerFn = onDebouncedHeaderLinkClick;
   libraryLink.listenerFn = onDebouncedHeaderLinkClick;
   logoLink.listenerFn = onDebouncedHeaderLinkClick;
+
   searchForm.listenerFn = onDebouncedFormSubmit;
 
   nowPlaying.listenerFn = onDebouncedFilterBtnClick;
@@ -164,5 +164,6 @@ function removeDubles(array) {
 }
 
 initilizeRefs();
+sectionRoutingClassWork();
 
 export { state, setState, initilizeRefs, removeDubles };

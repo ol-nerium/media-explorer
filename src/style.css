@@ -152,7 +152,14 @@ img {
   gap: 1rem;
   font-size: 2rem;
   padding: 2rem 0;
-  height: 4rem;
+  /* height: 4rem; */
+  flex-wrap: wrap;
+}
+
+.searchForm label {
+  width: 100%;
+  text-align: center;
+  font-size: 3rem;
 }
 .searchBtn {
   border: none;
@@ -219,14 +226,16 @@ img {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 2rem 0 2rem 0;
   width: 100%;
 }
 
 .filterBtn {
-  font-size: 2rem;
+  font-size: 2.5rem;
+  width: 220px;
+  height: 100px;
 }
 
 /* gallery */
@@ -306,8 +315,15 @@ img {
   font-size: 1.5rem;
 }
 
-.active {
+.pagBtn.active {
   background-color: red;
+  color: wheat;
+  font-size: 1.5rem;
+}
+
+.active {
+  color: red;
+  /* background-color: red; */
 }
 .inactive {
   background-color: green;

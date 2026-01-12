@@ -11,6 +11,7 @@ import {
 import { modalOpen } from "./modal";
 import { SECTIONS } from "./pageRouting";
 import { fetchPageWithResults } from "./libraryButtonsInterface";
+import { searchBlockClassWork } from "./utils/classWork";
 
 const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
@@ -26,13 +27,16 @@ export function galleryMarkup(array) {
 
   const html = template({ movies: array });
   if (firstLoad || !infiniteScroll) {
-    console.log("first load or !infinite scroll");
+    // console.log("first load or !infinite scroll");
     galleryRoot.innerHTML = html;
     state.clearGalleryIds();
   } else galleryRoot.innerHTML += html;
 
   state.addItemsGalleryIds(state.currentResults.map((item) => item.id));
   createPaginationMarkup();
+  // add active to filter/query as it fixed in state
+
+  searchBlockClassWork();
 
   firstLoad = false;
 }
@@ -68,7 +72,6 @@ export async function galleryUpdate(state) {
       setState({ ...res, ...currentSearchValue });
 
       galleryMarkup(state.currentResults);
-      console.log(state);
       firstLoad = false;
 
       state.setIsSuccess();
@@ -76,6 +79,7 @@ export async function galleryUpdate(state) {
     .catch((error) => {
       state.setIsError();
       state.setErrorMessage(error.message);
+      console.log(error);
     })
     .finally(() => {
       state.setIsIdle();

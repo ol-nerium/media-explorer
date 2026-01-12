@@ -1,6 +1,7 @@
 import { state } from "../main";
 import { galleryUpdate, isInfiniteScroll } from "./galleryCreate";
 import { scrollUp } from "./scrollInterface";
+import { paginationClassWork } from "./utils/classWork";
 const paginationRoot = document.getElementById("pagination");
 paginationRoot.addEventListener("click", paginationInterface);
 
@@ -57,20 +58,6 @@ function createPaginationMarkup() {
 
   paginationRoot.innerHTML = resMarkup;
   paginationClassWork();
-}
-
-function paginationClassWork() {
-  const currentPageElem = document.querySelector(`[data-page='${state.page}']`);
-
-  currentPageElem.classList.add("active");
-  if (
-    Number(currentPageElem.dataset.page) === Number(state.total_pages) ||
-    Number(currentPageElem.dataset.page) === 500
-  )
-    document.querySelector(".rightArrow").classList.add("inactive");
-
-  if (Number(currentPageElem.dataset.page) === 1)
-    document.querySelector(".leftArrow").classList.add("inactive");
 }
 
 function paginationInterface(e) {
