@@ -2,6 +2,13 @@ import { getGenresList as fetchGenresList } from "./utils/apiService";
 import { SECTIONS } from "./pageRouting";
 import { removeDubles } from "../main";
 
+import {
+  showLoader,
+  showError,
+  showSuccess,
+  showWhenIdle,
+} from "./notificationCalling";
+
 const STATUS = {
   IDLE: "idle",
   LOADING: "loading",
@@ -45,19 +52,29 @@ class State {
 
   setIsloading() {
     this.status = STATUS.LOADING;
+    showLoader();
   }
   setIsSuccess() {
     this.status = STATUS.SUCCESS;
-  }
-  setIsError() {
-    this.status = STATUS.ERROR;
-  }
-  setIsIdle() {
-    this.status = STATUS.IDLE;
+    showLoader(false);
+    if (!this.modal && this.currentResults.length > 1)
+      showSuccess(
+        "Завантажили " +
+          this.currentResults.length +
+          " результатів по Вашому запиту!"
+      );
   }
 
   setErrorMessage(message) {
     this.errorMessage = message;
+  }
+
+  setIsError() {
+    this.status = STATUS.ERROR;
+    showError(this.errorMessage);
+  }
+  setIsIdle() {
+    this.status = STATUS.IDLE;
   }
 
   setSearchQuery(q) {

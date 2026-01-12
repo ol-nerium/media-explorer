@@ -68,7 +68,6 @@ export function rewriteKeyCompletelyInLS(key, newValue) {
     const sterializedValue = JSON.stringify(newValue);
     localStorage.setItem(key, sterializedValue);
   } catch (error) {
-    console.log("error setting key value to LS");
     throw error;
   }
 }
@@ -96,7 +95,6 @@ export function setSavedToStorageFromLS(filterValue, libraryStorage) {
     libraryStorage[filterValue].total_pages = total_pages;
     libraryStorage[filterValue].total_results = total_results;
   } catch (e) {
-    console.log("something gone wrong when getting results from LS in library");
     throw e;
   }
 }

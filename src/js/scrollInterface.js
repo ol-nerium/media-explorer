@@ -15,7 +15,6 @@ export function documentWasTotallyScrolled() {
   // number of pixels by which an element's content is scrolled from its top edge
 
   const isBottom = Math.abs(rootHeight - rootClientHeight - rootScrollTop) <= 1;
-  if (isBottom) console.log("bottom of page");
   return isBottom; // bottom of the page if true
 }
 
@@ -31,12 +30,10 @@ export function galleryWasScrolled() {
     // window.innerHeight = inner hight of viewport
     // window.innerHeight doesn't include horizintal scrollbar in Chrome / Edge / Safari / Firefox
     // Engines treat scrollbars as overlay UI, not layout content
-    // if (bottom < window.innerHeight) {
-    //   console.log("bottom of gallery intersected viewport");
-    // }
-    // if (bottom - galleryElemHalfHeight < window.innerHeight) {
-    //   console.log("should fetch");
-    // }
+
+    //bottom < window.innerHeight bottom of gallery intersected viewport
+    //bottom - galleryElemHalfHeight < window.innerHeight should fetch
+
     // will return true if gallery if half of element to the intersection:
     return bottom - galleryElemHalfHeight < window.innerHeight;
     // return bottom < window.innerHeight;

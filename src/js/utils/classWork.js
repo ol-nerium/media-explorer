@@ -120,10 +120,22 @@ function searchBlockClassWork() {
   // prevSearchFilter = currentSearchFilter;
 }
 
+function showSpinnerClassWork(bool) {
+  const spinner = document.querySelector(".loader");
+  // if(spinner)
+
+  if (bool) {
+    spinner.classList.remove("hidden");
+  } else {
+    spinner.classList.add("hidden");
+  }
+}
+
 export {
   sectionRoutingClassWork,
   paginationClassWork,
   modalVisibilityClassWork,
   modalButtonsClassContentWork,
   searchBlockClassWork,
+  showSpinnerClassWork,
 };

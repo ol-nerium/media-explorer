@@ -5,6 +5,7 @@ import {
   rewriteKeyCompletelyInLS,
   setSavedToStorageFromLS,
 } from "./localStorage";
+import { showErrorNotification } from "./notificationCalling";
 import { fetchResultsByIds } from "./utils/apiService";
 
 const libraryStorage = {
@@ -29,9 +30,9 @@ export function fetchPageWithResults(page, filterValue) {
   const currentIdsArray = libraryStorage[filterValue].pages_ids_array[page - 1];
 
   if (!currentIdsArray) {
-    console.log("no results, needs indication");
     return new Promise((resolve, reject) => {
-      reject("no results, needs indication");
+      // showErrorNotification("no results(");
+      resolve("no results, needs indication");
     });
   }
 

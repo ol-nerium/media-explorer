@@ -1,4 +1,5 @@
 import debounce from "debounce";
+import "toastify-js/src/toastify.css";
 import "./style.css";
 
 import "./js/utils/handlebarsHelpers";
@@ -21,10 +22,11 @@ import { State } from "./js/appState";
 import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
 import { changeSection } from "./js/pageRouting";
 import { sectionRoutingClassWork } from "./js/utils/classWork";
+import { callSuccess, showErrorNotification } from "./js/notificationCalling";
 
 const state = new State();
 state.updateGenresList();
-
+callSuccess();
 const DEBOUNCE_DELAY = 500;
 
 const setState = ({
@@ -49,7 +51,9 @@ const onSearchMovies = (target) => {
 
   if (query) {
     if (query.trim() === "") {
-      console.log(' "indicate empty input" ');
+      showErrorNotification(
+        "Будь ласка, введіть запит або виберіть фільтр замість пустого рядка"
+      );
       return;
     }
 

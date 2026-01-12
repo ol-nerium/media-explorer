@@ -29,7 +29,6 @@ export function loadCurrentSection() {
 
   const section = state.currentSection;
   if (!section) return;
-  console.log("fire");
   const galleryRoot = document.getElementById("gallery");
   const paginationRoot = document.getElementById("pagination");
 

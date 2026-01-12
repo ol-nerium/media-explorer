@@ -139,8 +139,8 @@ function getKeywordIdByTitle(query, page) {
   // Search for keywords by their name.
   return axios
     .get(`search/keyword?query=${query}&page=${page}`)
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .then((res) => res.data);
+  // .catch((e) => console.log(e));
 }
 
 function getMovieByTitle(page = 1, query) {
@@ -174,6 +174,12 @@ function fetchResultsByIds(idsArr) {
 // https://api.themoviedb.org/3/movie/{movie_id}/translations
 // https://api.themoviedb.org/3/movie/{movie_id}/videos => https://www.youtube.com/watch?v=${key}!
 
+function getExternalFilmVideosById(movie_id) {
+  return axios
+    .get(`https://api.themoviedb.org/3/movie/${movie_id}/videos`)
+    .then((res) => res.data);
+}
+
 export {
   getMoviesByFilters,
   getGenresList,
@@ -188,4 +194,5 @@ export {
   getKeywordIdByTitle,
   getMovieByTitle,
   fetchResultsByIds,
+  getExternalFilmVideosById,
 };

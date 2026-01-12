@@ -12,6 +12,7 @@ import { modalOpen } from "./modal";
 import { SECTIONS } from "./pageRouting";
 import { fetchPageWithResults } from "./libraryButtonsInterface";
 import { searchBlockClassWork } from "./utils/classWork";
+import { showErrorNotification } from "./notificationCalling";
 
 const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
@@ -21,7 +22,7 @@ let infiniteScroll = false;
 
 export function galleryMarkup(array) {
   if (array.length === 0) {
-    console.log("no results needs indication");
+    showErrorNotification("Нажаль, по вашому запиту нема результатів( ");
     return;
   } // no results needs indication
 
@@ -50,19 +51,19 @@ export async function galleryUpdate(state) {
   if (currentSection === SECTIONS.libraryLink) {
     currentApiFunction = fetchPageWithResults;
     currentSearchValue = { filter: currentSearchFilter };
-    console.log("search by filter on library section");
+    // console.log("search by filter on library section");
   }
 
   if (currentSearchFilter && currentSection === SECTIONS.homeLink) {
     currentApiFunction = filterButtonsRefs[currentSearchFilter].fetchFn;
     currentSearchValue = { filter: currentSearchFilter };
-    console.log("search by filter");
+    // console.log("search by filter");
   }
 
   if (searchQuery && currentSection === SECTIONS.homeLink) {
     currentApiFunction = searchForm.fetchFn;
     currentSearchValue = { query: searchQuery };
-    console.log("search by query");
+    // console.log("search by query");
   }
 
   state.setIsloading();
@@ -77,9 +78,8 @@ export async function galleryUpdate(state) {
       state.setIsSuccess();
     })
     .catch((error) => {
-      state.setIsError();
       state.setErrorMessage(error.message);
-      console.log(error);
+      state.setIsError();
     })
     .finally(() => {
       state.setIsIdle();

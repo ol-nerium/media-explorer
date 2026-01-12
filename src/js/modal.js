@@ -1,5 +1,5 @@
 import Handlebars from "handlebars";
-import { getMovieById } from "./utils/apiService";
+import { getExternalFilmVideosById, getMovieById } from "./utils/apiService";
 import { state } from "../main";
 import galleryItem from "../partials/galleryItem.hbs?raw";
 import { isRecordStoredInLS, saveToLS } from "./localStorage";
@@ -14,11 +14,15 @@ let backdropRoot;
 
 let addToQuequeBtn;
 let addToFavoritesBtn;
+let getVideosBtn;
 let currentId = 0;
 export function modalOpen(e) {
   if (!e.target.dataset.filmid) return;
 
   const id = e.target.dataset.filmid;
+
+  state.setIsloading();
+
   getMovieById(id)
     .then((res) => {
       modalRender(res);
@@ -28,9 +32,15 @@ export function modalOpen(e) {
       modalRoot.addEventListener("click", modalGalleryClickControls);
 
       modalVisibilityClassWork("open");
+      state.setIsSuccess();
     })
-    .catch((e) => {
+    .catch((error) => {
+      state.setErrorMessage(error.message);
+      state.setIsError();
       throw e;
+    })
+    .finally(() => {
+      state.setIsIdle();
     });
 }
 
@@ -59,6 +69,7 @@ function modalRender(res) {
   backdropRoot = modalRoot.querySelector(".backdrop");
   addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
   addToFavoritesBtn = modalRoot.querySelector('[data-modalbtn="favorites"]');
+  getVideosBtn = document.querySelector(".getModalVideos");
 
   backdropRoot.removeEventListener("click", onBackdropClick);
   addToQuequeBtn.removeEventListener("click", onClickmodalButton);
@@ -67,6 +78,9 @@ function modalRender(res) {
   backdropRoot.addEventListener("click", onBackdropClick);
   addToQuequeBtn.addEventListener("click", onClickmodalButton);
   addToFavoritesBtn.addEventListener("click", onClickmodalButton);
+
+  getVideosBtn.removeEventListener("click", addVideosToModal);
+  getVideosBtn.addEventListener("click", addVideosToModal);
 
   changeButtonContent(addToQuequeBtn, res.id);
   changeButtonContent(addToFavoritesBtn, res.id);
@@ -139,13 +153,46 @@ function galleryScroll(direction) {
   } else closeElements.nextElement = galleryArray[currentElementIndex + 1];
 
   if (direction === "left" && closeElements.prevElement) {
-    getMovieById(closeElements.prevElement).then((res) => {
-      modalRender(res);
-    });
+    state.setIsloading();
+    getMovieById(closeElements.prevElement)
+      .then((res) => {
+        modalRender(res);
+        state.setIsSuccess();
+      })
+      .catch((e) => {
+        state.setIsError();
+        state.errorMessage(e.message);
+      })
+      .finally(() => {
+        state.setIsIdle();
+      });
   }
   if (direction === "right" && closeElements.nextElement) {
     getMovieById(closeElements.nextElement).then((res) => {
       modalRender(res);
+      state.setIsSuccess();
     });
   }
+}
+
+function addVideosToModal() {
+  console.log(state.modal.id);
+  const id = state.modal.id;
+  if (!id) return;
+  getExternalFilmVideosById(id).then((res) => {
+    console.log(
+      res.results
+        .filter((item) => {
+          if (item.site !== "YouTube") return false;
+          if (item.type !== "Trailer") return false;
+          return true;
+        })
+        .map((item) => {
+          return {
+            name: item.name,
+            link: `https://www.youtube.com/watch?v=${item.key}`,
+          };
+        })
+    );
+  });
 }
