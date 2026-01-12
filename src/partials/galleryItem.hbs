@@ -23,16 +23,31 @@
 
   <div class="modalContent" data-id={{id}}>
     <div class="modalContentHero">
-      {{#if homepage}}
+      {{#if title}}
         <h2 class="film-title">
-          <a
-            href="{{homepage}}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >{{title}}</a>
+          {{#if homepage}}
+            <a
+              href="{{homepage}}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{title}}</a>
+          {{else}}
+            {{title}}
+          {{/if}}
         </h2>
       {{else}}
-        <h2 class="film-title">{{original_title}} </h2>
+
+        <h2 class="film-title">
+          {{#if homepage}}
+            <a
+              href="{{homepage}}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{original_title}}</a>
+          {{else}}
+            {{original_title}}
+          {{/if}}
+        </h2>
       {{/if}}
 
       <div class="posterImg-wrap">

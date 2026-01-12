@@ -160,7 +160,6 @@ function removeDubles(array) {
   array.forEach((item) => {
     if (!resArr.includes(item)) resArr.push(item);
   });
-  console.log(array);
   return resArr;
 }
 

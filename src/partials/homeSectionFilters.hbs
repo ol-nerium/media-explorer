@@ -1,23 +1,45 @@
-<ul class="filterButtonsSection">
-  <li>
-    <button type="button" class="filterBtn" data-filter="nowPlaying">
-      Now playing
+<div class="searchSection">
+  <ul class="filterButtonsSection">
+    <li>
+      <button type="button" class="filterBtn" data-filter="nowPlaying">
+        Now playing
+      </button>
+    </li>
+    <li>
+      <button type="button" class="filterBtn" data-filter="popular">
+        Popular
+      </button>
+    </li>
+    <li>
+      <button type="button" class="filterBtn" data-filter="topRated">
+        Top rated
+      </button>
+    </li>
+    <li>
+      <button type="button" class="filterBtn" data-filter="upcoming">
+        Upcoming
+      </button>
+    </li>
+    <!-- <li>
+            <button type="button" data-filter="trendDay">Trending today</button>
+          </li>
+          <li>
+            <button type="button" data-filter="trendWeek">
+              Trending this week
+            </button> -->
+    <!-- </li> -->
+  </ul>
+  <form action="" class="searchForm">
+    <label for="searchMovieField">Search</label>
+    <input
+      type="text"
+      id="searchMovieField"
+      placeholder="search movie by name"
+    />
+    <button class="searchBtn" data-type="searchBtn" type="submit">
+      <svg>
+        <use href="#search-icon"></use>
+      </svg>
     </button>
-  </li>
-  <li>
-    <button type="button" class="filterBtn" data-filter="popular">
-      Popular
-    </button>
-  </li>
-  <li>
-    <button type="button" class="filterBtn" data-filter="topRated">
-      Top rated
-    </button>
-  </li>
-  <li>
-    <button type="button" class="filterBtn" data-filter="upcoming">
-      Upcoming
-    </button>
-  </li>
-
-</ul>
+  </form>
+</div>

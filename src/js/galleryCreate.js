@@ -68,6 +68,7 @@ export async function galleryUpdate(state) {
       setState({ ...res, ...currentSearchValue });
 
       galleryMarkup(state.currentResults);
+      console.log(state);
       firstLoad = false;
 
       state.setIsSuccess();

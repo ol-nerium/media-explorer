@@ -118,64 +118,66 @@
           <nav class="navigation">
             <ul class="navigation-list">
               <li class="navigation-list__item">
-                <a class="navLink" data-type="homeLink" href="/"> Home </a>
-              </li>
-              <li class="navigation-list__item">
                 <a class="navLink" data-type="libraryLink" href="/">
                   My library
                 </a>
               </li>
+              <li class="navigation-list__item">
+                <a class="navLink" data-type="homeLink" href="/"> Home </a>
+              </li>
             </ul>
           </nav>
         </div>
-
-        <form action="" class="searchForm">
-          <label for="searchMovieField">Search</label>
-          <input
-            type="text"
-            id="searchMovieField"
-            placeholder="search movie by name"
-          />
-          <button class="searchBtn" data-type="searchBtn" type="submit">
-            <svg>
-              <use href="#search-icon"></use>
-            </svg>
-          </button>
-        </form>
       </div>
     </header>
     <main>
       <div class="container main">
-        <ul class="filterButtonsSection">
-          <li>
-            <button type="button" class="filterBtn" data-filter="nowPlaying">
-              Now playing
-            </button>
-          </li>
-          <li>
-            <button type="button" class="filterBtn" data-filter="popular">
-              Popular
-            </button>
-          </li>
-          <li>
-            <button type="button" class="filterBtn" data-filter="topRated">
-              Top rated
-            </button>
-          </li>
-          <li>
-            <button type="button" class="filterBtn" data-filter="upcoming">
-              Upcoming
-            </button>
-          </li>
-          <!-- <li>
+        <div class="searchSection">
+          <ul class="filterButtonsSection">
+            <li>
+              <button type="button" class="filterBtn" data-filter="nowPlaying">
+                Now playing
+              </button>
+            </li>
+            <li>
+              <button type="button" class="filterBtn" data-filter="popular">
+                Popular
+              </button>
+            </li>
+            <li>
+              <button type="button" class="filterBtn" data-filter="topRated">
+                Top rated
+              </button>
+            </li>
+            <li>
+              <button type="button" class="filterBtn" data-filter="upcoming">
+                Upcoming
+              </button>
+            </li>
+            <!-- <li>
             <button type="button" data-filter="trendDay">Trending today</button>
           </li>
           <li>
             <button type="button" data-filter="trendWeek">
               Trending this week
             </button> -->
-          <!-- </li> -->
-        </ul>
+            <!-- </li> -->
+          </ul>
+          <form action="" class="searchForm">
+            <label for="searchMovieField">Search</label>
+            <input
+              type="text"
+              id="searchMovieField"
+              placeholder="search movie by name"
+            />
+            <button class="searchBtn" data-type="searchBtn" type="submit">
+              <svg>
+                <use href="#search-icon"></use>
+              </svg>
+            </button>
+          </form>
+        </div>
+
         <ul id="gallery" class="gallery"></ul>
         <button class="scrollup-btn">
           <svg>

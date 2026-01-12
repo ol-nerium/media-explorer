@@ -17,11 +17,11 @@ export function modalOpen(e) {
   const id = e.target.dataset.filmid;
   getMovieById(id)
     .then((res) => {
-      state.setModalInfo(res);
-      const html = template(state.modal);
-      // modalRoot.insertAdjacentHTML("afterbegin", html);
-      modalRoot.innerHTML = html;
-      modalRoot.classList.contains("isClosed");
+      modalRender(res);
+      document.documentElement.style.overflow = "hidden";
+      window.addEventListener("keydown", handleEscapeKey);
+      window.addEventListener("keydown", modalGalleryKeyControls);
+      modalRoot.addEventListener("click", modalGalleryClickControls);
 
       if (
         modalRoot.classList.contains("isClosed") &&
@@ -29,28 +29,6 @@ export function modalOpen(e) {
       ) {
         modalRoot.classList.replace("isClosed", "isOpened");
       }
-      document.documentElement.style.overflow = "hidden";
-
-      backdropRoot = modalRoot.querySelector(".backdrop");
-
-      addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
-      addToFavoritesBtn = modalRoot.querySelector(
-        '[data-modalbtn="favorites"]'
-      );
-
-      window.addEventListener("keydown", handleEscapeKey);
-      backdropRoot.addEventListener("click", onBackdropClick);
-
-      // modalRoot.addEventListener("click", modalClose);
-
-      modalRoot.addEventListener("click", modalGalleryClickControls);
-      modalRoot.addEventListener("keydown", modalGalleryKeyControls);
-
-      addToQuequeBtn.addEventListener("click", onClickmodalButton);
-      addToFavoritesBtn.addEventListener("click", onClickmodalButton);
-
-      checkItemInLS(addToQuequeBtn, id);
-      checkItemInLS(addToFavoritesBtn, id);
     })
     .catch((e) => {
       throw e;
@@ -61,6 +39,9 @@ function modalClose() {
   state.setModalInfo(null);
 
   document.documentElement.style.overflow = "";
+  window.removeEventListener("keydown", handleEscapeKey);
+  window.removeEventListener("keydown", modalGalleryKeyControls);
+  modalRoot.removeEventListener("click", modalGalleryClickControls);
 
   if (!state.modal) {
     if (
@@ -70,16 +51,35 @@ function modalClose() {
       modalRoot.classList.replace("isOpened", "isClosed");
     }
   }
+
   window.removeEventListener("keydown", handleEscapeKey);
   backdropRoot.removeEventListener("click", onBackdropClick);
 
-  modalRoot.removeEventListener("click", modalClose);
-
   modalRoot.removeEventListener("click", modalGalleryClickControls);
-  modalRoot.removeEventListener("keydown", modalGalleryKeyControls);
+  window.removeEventListener("keydown", modalGalleryKeyControls);
+}
 
+function modalRender(res) {
+  state.setModalInfo(res);
+  const html = template(state.modal);
+  modalRoot.innerHTML = html;
+
+  backdropRoot = modalRoot.querySelector(".backdrop");
+  addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
+  addToFavoritesBtn = modalRoot.querySelector('[data-modalbtn="favorites"]');
+
+  backdropRoot.removeEventListener("click", onBackdropClick);
   addToQuequeBtn.removeEventListener("click", onClickmodalButton);
   addToFavoritesBtn.removeEventListener("click", onClickmodalButton);
+
+  // modalRoot.classList.contains("isClosed");
+
+  backdropRoot.addEventListener("click", onBackdropClick);
+  addToQuequeBtn.addEventListener("click", onClickmodalButton);
+  addToFavoritesBtn.addEventListener("click", onClickmodalButton);
+
+  checkItemInLS(addToQuequeBtn, res.id);
+  checkItemInLS(addToFavoritesBtn, res.id);
 }
 
 function onBackdropClick(e) {
@@ -105,7 +105,6 @@ function checkItemInLS(btn, id) {
   // value=id //
 
   if (isRecordStoredInLS(id, btn.dataset.modalbtn)) {
-    console.log(id);
     btn.classList.remove("addItem");
     btn.classList.add("removeItem");
     btn.textContent = "Remove from " + [btn.dataset.modalbtn];
@@ -117,20 +116,21 @@ function checkItemInLS(btn, id) {
 }
 
 function modalGalleryKeyControls(e) {
-  console.log(e);
-  console.log(e.target);
+  if (e.code === "ArrowRight") galleryScroll("right");
+  if (e.code === "ArrowLeft") galleryScroll("left");
 }
+
 function modalGalleryClickControls(e) {
   let target = e.target;
   if (!target.dataset.modalcontrol)
     target = target.closest("[data-modalcontrol]");
   if (!target) return;
-  console.log(target.dataset);
+
   if (target.dataset.modalcontrol === "right") {
-    console.log(state.allGalleryIds);
-    galleryRightScroll();
+    galleryScroll("right");
   }
   if (target.dataset.modalcontrol === "left") {
+    galleryScroll("left");
   }
   if (target.dataset.modalcontrol === "close") modalClose();
 }
@@ -140,23 +140,35 @@ function modalGalleryClickControls(e) {
 //   return Promise.allSettled(fetchArray);
 // }
 
-function galleryRightScroll() {
+function galleryScroll(direction) {
   const galleryArray = state.allGalleryIds;
   currentId = state.modal.id;
   const currentElementIndex = galleryArray.indexOf(currentId);
 
   if (galleryArray.length < 2) return;
 
-  let prevElement;
-  let nextElement;
-  console.log(currentElementIndex !== 0);
+  const closeElements = {
+    prevElement: null,
+    currentElement: currentId,
+    nextElement: null,
+  };
+
   if (currentElementIndex <= 0) {
-    prevElement = galleryArray[currentElementIndex - 1];
-  } else prevElement = galleryArray[galleryArray.length - 1];
+    closeElements.prevElement = galleryArray[galleryArray.length - 1];
+  } else closeElements.prevElement = galleryArray[currentElementIndex - 1];
 
   if (currentElementIndex >= galleryArray.length - 1) {
-    nextElement = galleryArray[0];
-  }
+    closeElements.nextElement = galleryArray[0];
+  } else closeElements.nextElement = galleryArray[currentElementIndex + 1];
 
-  console.log(prevElement, nextElement);
+  if (direction === "left" && closeElements.prevElement) {
+    getMovieById(closeElements.prevElement).then((res) => {
+      modalRender(res);
+    });
+  }
+  if (direction === "right" && closeElements.nextElement) {
+    getMovieById(closeElements.nextElement).then((res) => {
+      modalRender(res);
+    });
+  }
 }

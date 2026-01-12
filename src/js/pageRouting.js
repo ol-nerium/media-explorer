@@ -21,27 +21,40 @@ export function changeSection(newSection) {
   loadCurrentSection();
 }
 
-const filterButtonsSection = document.querySelector(".filterButtonsSection");
-const galleryRoot = document.getElementById("gallery");
-const paginationRoot = document.getElementById("pagination");
 const homeSectionTemplate = Handlebars.compile(homeSectionFilters);
 const librarySectionTemplate = Handlebars.compile(librarySectionFilters);
 
 export function loadCurrentSection() {
+  let searchSection = document.querySelector(".searchSection");
+
   const section = state.currentSection;
   if (!section) return;
+  console.log("fire");
+  const galleryRoot = document.getElementById("gallery");
+  const paginationRoot = document.getElementById("pagination");
 
   if (section === SECTIONS.homeLink) {
-    filterButtonsSection.innerHTML = homeSectionTemplate();
+    // searchSection = document.querySelector(".searchSection");
+    searchSection.remove();
+    galleryRoot.insertAdjacentHTML("beforebegin", homeSectionTemplate());
+
+    galleryRoot.style.display = "flex";
   }
   if (section === SECTIONS.libraryLink) {
-    filterButtonsSection.innerHTML = librarySectionTemplate();
+    // searchSection = document.querySelector(".searchSection");
+    searchSection.remove();
+    galleryRoot.insertAdjacentHTML("beforebegin", librarySectionTemplate());
+
+    galleryRoot.style.display = "flex";
   }
+
   if (section === SECTIONS.logoLink) {
-    filterButtonsSection.innerHTML = "";
+    searchSection.style.display = "none";
+    galleryRoot.style.display = "none";
   }
+
   galleryRoot.innerHTML = "";
-  paginationRoot.innerHTML = "";
+  if (paginationRoot) paginationRoot.innerHTML = "";
   state.clearGalleryIds();
 
   reloadRefs();
