@@ -1,14 +1,6 @@
 {{! <ul class="gallery"> }}
 {{#each movies}}
   <li class="gallery-item">
-    {{#if this.title}}
-      <h3 class="gallery-title">{{this.title}} </h3>
-    {{else}}
-      <h3 class="gallery-title"> {{this.original_title}}</h3>
-    {{/if}}
-    {{#if this.release_date}}
-      <p class="gallery-year">{{formatDate this.release_date}}</p>
-    {{/if}}
     <div class="img-wrap">
       {{#if this.poster_path}}
         <img
@@ -25,9 +17,21 @@
       {{/if}}
     </div>
 
-    <ul class="gallery-item_genres">
-      {{{genresGenerator this.genre_ids}}}
-    </ul>
+    <div class="gallery-item-captionBlock">
+      {{#if this.title}}
+        <h3 class="gallery-title">{{this.title}} </h3>
+      {{else}}
+        <h3 class="gallery-title"> {{this.original_title}}</h3>
+      {{/if}}
+      <ul class="gallery-item_genres">
+        {{{genresGenerator this.genre_ids}}}
+      </ul>
+
+      {{#if this.release_date}}
+        <p class="gallery-year">{{formatDate this.release_date}}</p>
+      {{/if}}
+    </div>
+
   </li>
 {{/each}}
 

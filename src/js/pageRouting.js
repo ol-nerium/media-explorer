@@ -38,7 +38,7 @@ export function loadCurrentSection() {
     searchSection.remove();
     galleryRoot.insertAdjacentHTML("beforebegin", homeSectionTemplate());
 
-    galleryRoot.style.display = "flex";
+    galleryRoot.style.display = "";
 
     sectionRoutingClassWork();
   }
@@ -47,7 +47,7 @@ export function loadCurrentSection() {
     searchSection.remove();
     galleryRoot.insertAdjacentHTML("beforebegin", librarySectionTemplate());
 
-    galleryRoot.style.display = "flex";
+    galleryRoot.style.display = "";
 
     sectionRoutingClassWork();
   }

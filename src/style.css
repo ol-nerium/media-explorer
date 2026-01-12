@@ -36,18 +36,8 @@ button {
   transition: color 500ms ease-in-out, background-color 700ms ease-in-out;
 }
 
-.filterButtonsSection button:hover {
-  color: var(--accentColor);
-  background-color: var(--background-accentColor);
-}
-
 li {
   list-style: none;
-}
-
-svg {
-  width: 40px;
-  height: 40px;
 }
 
 body {
@@ -83,10 +73,14 @@ img {
 }
 
 .container {
+  min-width: 425px;
   max-width: 1200px;
+
   margin: 0 auto;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+  /* min-width: 420px; */
 }
 
 /* header */
@@ -95,7 +89,42 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 2rem 0;
+
+  @media screen and (min-width: 599px) {
+    /* --tabletMaxWidth: 1000px; */
+    /* --mobileMaxWidth: 800px; */
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem;
+  }
+  @media screen and (min-width: 1001px;) {
+    /* --desktopMaxWidth: 1250px; */
+  }
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navigation {
+  width: 100%;
+}
+
+.navigation-list {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.navigation-list__item {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
@@ -105,16 +134,6 @@ img {
   font-size: 1.2rem;
   padding: 0.5rem;
   background-color: #000;
-}
-
-.navigation {
-}
-
-.header-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
 }
 
 .logoLink svg,
@@ -146,14 +165,16 @@ img {
 
 .searchForm {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 1rem;
   font-size: 2rem;
-  padding: 2rem 0;
-  /* height: 4rem; */
-  flex-wrap: wrap;
+  position: relative;
+
+  @media screen and (min-width: 950px) {
+    width: 70%;
+  }
 }
 
 .searchForm label {
@@ -161,36 +182,46 @@ img {
   text-align: center;
   font-size: 3rem;
 }
+
+.searchForm input {
+  flex-grow: 1;
+  font-size: 2rem;
+  width: 100%;
+  padding: 1.5rem;
+
+  @media screen and (min-width: 599px) {
+    /* margin-left: 5rem; */
+    /* width: 80%; */
+  }
+}
+
 .searchBtn {
+  position: absolute;
+  font-size: 2rem;
+
+  top: 0;
+  left: 100%;
+  translate: -120% 130%;
   border: none;
   padding: 0;
   background-color: transparent;
   color: #fff;
+  height: 4rem;
+  width: 4rem;
+
   /* height: 100%; */
+  /* flex-wrap: nowrap; */
+}
+
+.searchBtn:hover {
+  color: var(--accentColor);
 }
 
 .searchBtn svg {
   display: block;
   fill: currentColor;
-  /* height: 40px;
-  width: 40px; */
-}
-
-.searchForm input {
-  flex-grow: 1;
-  font-size: 2rem;
-}
-
-.searchForm button {
-  font-size: 2rem;
-}
-
-.navigation-list {
-  display: flex;
-  gap: 1rem;
-}
-
-.navigation-list__item {
+  height: 100%;
+  width: 100%;
 }
 
 .navBtn {
@@ -210,54 +241,119 @@ img {
 
 .main {
   width: 100%;
-  padding: 0 2rem;
   /* position: relative; */
+
+  @media screen and (min-width: 599px) {
+    padding: 0 2rem;
+  }
 }
 
 .searchSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
   margin: 0 auto;
 }
 
 .filterButtonsSection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-  align-items: center;
   padding: 2rem 0 2rem 0;
   width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @media screen and (min-width: 599px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+    align-items: center;
+  }
+}
+
+.filterButtonsSection li {
+  flex-basis: 100%;
+  @media screen and (min-width: 599px) {
+    flex-basis: calc((100% - 2rem) / 2);
+  }
+
+  @media screen and (min-width: 950px) {
+    flex-basis: calc((100% - 6rem) / 4);
+  }
+}
+
+.filterButtonsSection.libraryBtnSection li {
+  @media screen and (min-width: 599px) {
+    flex-basis: calc((100% - 2rem) / 2);
+  }
 }
 
 .filterBtn {
   font-size: 2.5rem;
-  width: 220px;
   height: 100px;
+  width: 100%;
+}
+
+.filterButtonsSection button:hover {
+  color: var(--accentColor);
+  background-color: var(--background-accentColor);
 }
 
 /* gallery */
 .gallery {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
   gap: 1rem;
   padding-top: 3rem;
+
+  @media screen and (min-width: 699px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-width: 950px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
+
 .gallery-item {
-  flex-basis: calc((100% - 2rem) / 3);
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
+
+  width: 100%;
   min-height: 500px;
+  margin: 0 auto;
+  padding: 3rem 1rem 1rem 1rem;
+
+  /* flex-basis: calc((100% - 2rem) / 3); */
+
+  /* min-height: 500px; */
   box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
     rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 }
+
+.img-wrap {
+  max-width: 100%;
+  height: 70%;
+  /* flex-grow: 2;   */
+  overflow: hidden;
+}
+
+.gallery-item-captionBlock {
+  /* min-height: 20%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 30%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .gallery-title {
   font-size: 1.5rem;
   padding: 0 1rem;
-  height: 15%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,20 +363,22 @@ img {
 
 .gallery-year {
   text-align: center;
-}
-
-.img-wrap {
-  max-width: 100%;
-  height: 70%;
-  /* flex-grow: 2;   */
+  font-size: 1.5rem;
 }
 
 .gallery-item_genres {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap;
-  height: 15%;
   align-items: center;
+  flex-wrap: wrap;
+  /* height: 15%; */
+  padding: 1rem;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.gallery-item_genres li {
+  /* height: 100%; */
 }
 
 /* pagination */
@@ -313,6 +411,11 @@ img {
 }
 .pagBtn {
   font-size: 1.5rem;
+}
+
+.paginationBlock svg {
+  width: 40px;
+  height: 40px;
 }
 
 .pagBtn.active {
@@ -356,6 +459,8 @@ img {
 
 .modal svg {
   fill: currentColor;
+  width: 40px;
+  height: 40px;
 }
 
 .backdrop {
