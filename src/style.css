@@ -35,6 +35,10 @@
   box-sizing: border-box;
 }
 
+/* custom scrollbar */
+
+/*  */
+
 a,
 button {
   transition: color 500ms ease-in-out, background-color 700ms ease-in-out;
