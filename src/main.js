@@ -36,6 +36,7 @@ const setState = ({
   total_results = 0,
   filter = null,
   query = null,
+  searchGenres = [],
 }) => {
   state.setPage(page);
   state.setCurrentResults(results);
@@ -43,6 +44,7 @@ const setState = ({
   state.setTotalResults(total_results);
   state.setCurrentSearchFilter(filter);
   state.setSearchQuery(query);
+  state.setSearchGenres(...searchGenres);
 };
 
 const onSearchMovies = (target) => {
@@ -71,6 +73,19 @@ const onSearchMovies = (target) => {
   isFirstLoad(true);
   galleryUpdate(state);
 };
+
+function onGenreClick(e) {
+  e.preventDefault();
+  if (!e.target.dataset.genreid) return;
+
+  state.setCurrentSearchFilter(null);
+  state.setSearchQuery(null);
+  state.setSearchGenres(e.target.dataset.genreid);
+  state.setPage(1);
+
+  isFirstLoad(true);
+  galleryUpdate(state);
+}
 
 const headerLinkClick = (target) => {
   const clickedLinkName = target.dataset.type;
@@ -170,4 +185,7 @@ function removeDubles(array) {
 initilizeRefs();
 sectionRoutingClassWork();
 
-export { state, setState, initilizeRefs, removeDubles };
+const galleryNode = document.getElementById("gallery");
+galleryNode.addEventListener("click", onGenreClick); // can be fragile
+
+export { state, setState, initilizeRefs, removeDubles, onGenreClick };

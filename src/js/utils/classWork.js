@@ -131,6 +131,23 @@ function showSpinnerClassWork(bool) {
   }
 }
 
+function activeGenreClassWork() {
+  const currentIdArray = state.searchGenres;
+  const genreLinks = document.querySelectorAll(".genreIdLink");
+  if (currentIdArray?.length < 1 && genreLinks) {
+    return;
+  }
+  genreLinks.forEach((item) => {
+    // item.classList.remove("active");
+    if (
+      currentIdArray.includes(item.dataset.genreid) &&
+      !item.classList.contains("active")
+    )
+      item.classList.add("active");
+    // if (item.classList.contains("active")) item.classList.add("active");
+  });
+}
+
 export {
   sectionRoutingClassWork,
   paginationClassWork,
@@ -138,4 +155,5 @@ export {
   modalButtonsClassContentWork,
   searchBlockClassWork,
   showSpinnerClassWork,
+  activeGenreClassWork,
 };

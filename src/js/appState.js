@@ -21,10 +21,11 @@ class State {
     this.page = 1;
     this.total_pages = 0;
     this.total_results = 0;
+    this.searchQuery = null;
     this.currentSearchFilter = null;
+    this.searchGenres = [];
     this.currentResults = [];
     this.genresList = [];
-    this.searchQuery = null;
     this.errorMessage = "";
     this.status = STATUS.IDLE;
 
@@ -91,6 +92,16 @@ class State {
   }
   setCurrentSearchFilter(newFilterValue) {
     this.currentSearchFilter = newFilterValue;
+  }
+
+  setSearchGenres(genre = null) {
+    if (!genre) {
+      this.searchGenres = [];
+      return;
+    }
+
+    this.searchGenres = [...this.searchGenres, genre];
+    this.searchGenres = removeDubles(this.searchGenres);
   }
   setCurrentResults(array) {
     this.currentResults = array;

@@ -11,8 +11,9 @@ import {
 import { modalOpen } from "./modal";
 import { SECTIONS } from "./pageRouting";
 import { fetchPageWithResults } from "./libraryButtonsInterface";
-import { searchBlockClassWork } from "./utils/classWork";
+import { activeGenreClassWork, searchBlockClassWork } from "./utils/classWork";
 import { showErrorNotification } from "./notificationCalling";
+import { getMoviesByGenre } from "./utils/apiService";
 
 const template = Handlebars.compile(gallery);
 const galleryRoot = document.getElementById("gallery");
@@ -28,7 +29,6 @@ export function galleryMarkup(array) {
 
   const html = template({ movies: array });
   if (firstLoad || !infiniteScroll) {
-    // console.log("first load or !infinite scroll");
     galleryRoot.innerHTML = html;
     state.clearGalleryIds();
   } else galleryRoot.innerHTML += html;
@@ -38,32 +38,42 @@ export function galleryMarkup(array) {
   // add active to filter/query as it fixed in state
 
   searchBlockClassWork();
+  activeGenreClassWork();
 
   firstLoad = false;
 }
 
 export async function galleryUpdate(state) {
-  const { currentSearchFilter, searchQuery, page, currentSection } = state;
+  const {
+    currentSearchFilter,
+    searchQuery,
+    searchGenres,
+    page,
+    currentSection,
+  } = state;
   const { searchForm } = headerSearchRef;
   let currentApiFunction;
   let currentSearchValue;
 
-  if (currentSection === SECTIONS.libraryLink) {
+  if (searchGenres) {
+    currentApiFunction = getMoviesByGenre;
+    currentSearchValue = { searchGenres: searchGenres };
+    // return;
+  }
+
+  if (currentSearchFilter && currentSection === SECTIONS.libraryLink) {
     currentApiFunction = fetchPageWithResults;
     currentSearchValue = { filter: currentSearchFilter };
-    // console.log("search by filter on library section");
   }
 
   if (currentSearchFilter && currentSection === SECTIONS.homeLink) {
     currentApiFunction = filterButtonsRefs[currentSearchFilter].fetchFn;
     currentSearchValue = { filter: currentSearchFilter };
-    // console.log("search by filter");
   }
 
   if (searchQuery && currentSection === SECTIONS.homeLink) {
     currentApiFunction = searchForm.fetchFn;
     currentSearchValue = { query: searchQuery };
-    // console.log("search by query");
   }
 
   state.setIsloading();

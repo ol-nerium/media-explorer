@@ -1,9 +1,10 @@
 import Handlebars from "handlebars";
 import { getExternalFilmVideosById, getMovieById } from "./utils/apiService";
-import { state } from "../main";
+import { onGenreClick, state } from "../main";
 import galleryItem from "../partials/galleryItem.hbs?raw";
 import { isRecordStoredInLS, saveToLS } from "./localStorage";
 import {
+  activeGenreClassWork,
   modalButtonsClassContentWork,
   modalVisibilityClassWork,
 } from "./utils/classWork";
@@ -15,7 +16,9 @@ let backdropRoot;
 let addToQuequeBtn;
 let addToFavoritesBtn;
 let getVideosBtn;
+let modalGenreLinks;
 let currentId = 0;
+let posterMediaGalleryArr = [];
 export function modalOpen(e) {
   if (!e.target.dataset.filmid) return;
 
@@ -54,33 +57,40 @@ function modalClose() {
 
   modalVisibilityClassWork("close");
 
-  window.removeEventListener("keydown", handleEscapeKey);
-  backdropRoot.removeEventListener("click", onBackdropClick);
-
-  modalRoot.removeEventListener("click", modalGalleryClickControls);
-  window.removeEventListener("keydown", modalGalleryKeyControls);
+  backdropRoot?.removeEventListener("click", onBackdropClick);
+  addToQuequeBtn?.removeEventListener("click", onClickmodalButton);
+  addToFavoritesBtn?.removeEventListener("click", onClickmodalButton);
+  getVideosBtn?.removeEventListener("click", addVideosToModal);
+  modalGenreLinks?.removeEventListener("click", redirectToGenresGallery);
 }
 
 function modalRender(res) {
   state.setModalInfo(res);
+  posterMediaGalleryArr = [];
   const html = template(state.modal);
   modalRoot.innerHTML = html;
+  activeGenreClassWork();
+  try {
+    backdropRoot = modalRoot.querySelector(".backdrop");
+    addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
+    addToFavoritesBtn = modalRoot.querySelector('[data-modalbtn="favorites"]');
+    getVideosBtn = document.querySelector(".getModalVideos");
+    modalGenreLinks = document.querySelector(".modalgenres-list");
 
-  backdropRoot = modalRoot.querySelector(".backdrop");
-  addToQuequeBtn = modalRoot.querySelector('[data-modalbtn="queque"]');
-  addToFavoritesBtn = modalRoot.querySelector('[data-modalbtn="favorites"]');
-  getVideosBtn = document.querySelector(".getModalVideos");
+    backdropRoot?.removeEventListener("click", onBackdropClick);
+    addToQuequeBtn?.removeEventListener("click", onClickmodalButton);
+    addToFavoritesBtn?.removeEventListener("click", onClickmodalButton);
+    getVideosBtn?.removeEventListener("click", addVideosToModal);
+    modalGenreLinks?.removeEventListener("click", redirectToGenresGallery);
 
-  backdropRoot.removeEventListener("click", onBackdropClick);
-  addToQuequeBtn.removeEventListener("click", onClickmodalButton);
-  addToFavoritesBtn.removeEventListener("click", onClickmodalButton);
-
-  backdropRoot.addEventListener("click", onBackdropClick);
-  addToQuequeBtn.addEventListener("click", onClickmodalButton);
-  addToFavoritesBtn.addEventListener("click", onClickmodalButton);
-
-  getVideosBtn.removeEventListener("click", addVideosToModal);
-  getVideosBtn.addEventListener("click", addVideosToModal);
+    backdropRoot?.addEventListener("click", onBackdropClick);
+    addToQuequeBtn?.addEventListener("click", onClickmodalButton);
+    addToFavoritesBtn?.addEventListener("click", onClickmodalButton);
+    getVideosBtn?.addEventListener("click", addVideosToModal);
+    modalGenreLinks?.addEventListener("click", redirectToGenresGallery);
+  } catch (e) {
+    // console.log(e);
+  }
 
   changeButtonContent(addToQuequeBtn, res.id);
   changeButtonContent(addToFavoritesBtn, res.id);
@@ -104,9 +114,6 @@ function onClickmodalButton(e) {
 }
 
 function changeButtonContent(btn, id) {
-  //addToQuequeBtn.dataset.modalbtn; // key
-  //addToFavoritesBtn.dataset.modalbtn; //key
-  // value=id //
   const isInLS = isRecordStoredInLS(id, btn.dataset.modalbtn);
   modalButtonsClassContentWork(isInLS, btn);
 }
@@ -179,9 +186,9 @@ function addVideosToModal() {
   console.log(state.modal.id);
   const id = state.modal.id;
   if (!id) return;
-  getExternalFilmVideosById(id).then((res) => {
-    console.log(
-      res.results
+  getExternalFilmVideosById(id)
+    .then((res) => {
+      return res.results
         .filter((item) => {
           if (item.site !== "YouTube") return false;
           if (item.type !== "Trailer") return false;
@@ -189,10 +196,28 @@ function addVideosToModal() {
         })
         .map((item) => {
           return {
-            name: item.name,
+            trailerVideoTitle: item.name,
             link: `https://www.youtube.com/watch?v=${item.key}`,
           };
-        })
-    );
-  });
+        });
+    })
+    .then((res) => {
+      const { title, poster_path } = state.modal;
+      console.log(state.modal);
+      if (poster_path) {
+        posterMediaGalleryArr.push({
+          posterImageTitle: title,
+          link: `https://image.tmdb.org/t/p/original${poster_path}`,
+        });
+      }
+      if (res.length !== 0) {
+        posterMediaGalleryArr.push(...res);
+      }
+      console.log(posterMediaGalleryArr);
+    });
+}
+
+function redirectToGenresGallery(e) {
+  modalClose();
+  onGenreClick(e);
 }

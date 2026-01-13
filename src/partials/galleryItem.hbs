@@ -50,7 +50,7 @@
         </h2>
       {{/if}}
 
-      <div class="posterImg-wrap">
+      <div class="posterMedia-wrap">
         {{#if poster_path}}
           <img
             src="https://image.tmdb.org/t/p/original{{poster_path}}"
@@ -89,10 +89,14 @@
           <h3 class="modalgenres-title">Genres:</h3>
           <ul class="modalgenres-list">
             {{#each genres}}
-              <li
-                data-genre={{this.id}}
-                class="modalgenres-item"
-              >{{this.name}}</li>
+              <li data-genre={{this.id}} class="modalgenres-item">
+                <a
+                  href="#"
+                  data-genreid={{this.id}}
+                  class="genreIdLink"
+                >{{this.name}}</a>
+
+              </li>
             {{/each}}
           </ul>
 

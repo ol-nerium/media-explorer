@@ -1,10 +1,7 @@
-import { scrollUp } from "../scrollInterface";
 import {
   getMovieByTitle,
   getNowPlayingMoviesList,
   getPopularMoviesList,
-  getTMDBTrendingByDayMoviesList,
-  getTMDBTrendingByWeekMoviesList,
   getTopRatedMoviesList,
   getUpcomingMoviesList,
 } from "./apiService";
