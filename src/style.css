@@ -1,6 +1,6 @@
-* {
+/* * {
   outline: 1px solid white;
-}
+} */
 
 :root {
   /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
@@ -119,6 +119,7 @@ img {
   flex-direction: column;
   align-items: center;
   padding: 2rem 0;
+  position: relative;
 
   @media screen and (min-width: 599px) {
     /* --tabletMaxWidth: 1000px; */
@@ -984,10 +985,14 @@ img {
   /* position: relative; */
   top: 100%;
   left: 0;
+
+  translate: 2rem -100%;
+
+  /* tranla */
   z-index: 111;
 
   outline: 1px solid black;
-  width: 100%;
+  width: 15rem;
   min-width: 10rem;
 }
 

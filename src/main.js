@@ -78,6 +78,8 @@ const onSearchMovies = (target) => {
 
 function onGenreClick(e) {
   e.preventDefault();
+  console.log(e.target);
+
   if (!e.target.dataset.genreid) return;
 
   state.setCurrentSearchFilter(null);
