@@ -23,10 +23,12 @@ import { galleryWasScrolled, scrollUp } from "./js/scrollInterface";
 import { changeSection } from "./js/pageRouting";
 import { sectionRoutingClassWork } from "./js/utils/classWork";
 import { callSuccess, showErrorNotification } from "./js/notificationCalling";
+import { showGenresList } from "./js/showGenresList";
+
+import { getGenresList } from "./js/utils/apiService";
 
 const state = new State();
-state.updateGenresList();
-callSuccess();
+
 const DEBOUNCE_DELAY = 500;
 
 const setState = ({
@@ -184,6 +186,12 @@ function removeDubles(array) {
 
 initilizeRefs();
 sectionRoutingClassWork();
+getGenresList()
+  .then((res) => {
+    state.updateGenresList(res.genres);
+    showGenresList();
+  })
+  .catch((e) => console.log("error " + e.message + " fetching genre list"));
 
 const galleryNode = document.getElementById("gallery");
 galleryNode.addEventListener("click", onGenreClick); // can be fragile

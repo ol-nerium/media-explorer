@@ -23,7 +23,7 @@ function showError(errorMessage) {
 
 function showSuccess(successMessage = "") {
   showSpinnerClassWork(false);
-  showNotification("успіх! " + successMessage);
+  showNotification("Успіх! " + successMessage);
   showLoader(false);
 }
 
@@ -36,7 +36,7 @@ function showNotification(notification) {
     text: notification,
     duration: 1500,
     newWindow: true,
-    close: true,
+    // close: true,
     gravity: "top", // `top` or `bottom`
     position: "left", // `left`, `center` or `right`
     stopOnFocus: true, // Prevents dismissing of toast on hover
@@ -57,7 +57,7 @@ function showErrorNotification(message) {
     text: message,
     duration: 1500,
     newWindow: true,
-    close: true,
+    // close: true,
     gravity: "top", // `top` or `bottom`
     position: "left", // `left`, `center` or `right`
     stopOnFocus: true, // Prevents dismissing of toast on hover

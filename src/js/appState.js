@@ -1,4 +1,3 @@
-import { getGenresList as fetchGenresList } from "./utils/apiService";
 import { SECTIONS } from "./pageRouting";
 import { removeDubles } from "../main";
 
@@ -34,8 +33,8 @@ class State {
 
     this.currentSection = SECTIONS.homeLink;
   }
-  updateGenresList() {
-    fetchGenresList().then((res) => (this.genresList = res.genres));
+  updateGenresList(genres) {
+    this.genresList = genres;
   }
 
   addItemsGalleryIds(idsArr) {

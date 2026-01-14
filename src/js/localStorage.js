@@ -1,4 +1,5 @@
 import { removeDubles } from "../main";
+import { showErrorNotification, showNotification } from "./notificationCalling";
 
 let storedInLS = {};
 
@@ -21,8 +22,14 @@ export function saveToLS(value, key) {
 
     // decide if remove or add to/from LS
     isRecordStoredInLS(newValue, key);
-    if (storedInLS[key]) removeFromLS(newValue, key);
-    if (!storedInLS[key]) localStorage.setItem(key, sterializedValue);
+    if (storedInLS[key]) {
+      removeFromLS(newValue, key);
+      showErrorNotification("Ви видалили фільм " + "..." + "готуйте попку");
+    }
+    if (!storedInLS[key]) {
+      localStorage.setItem(key, sterializedValue);
+      showNotification("Ви додали фільм " + "..." + "до бібліотеки");
+    }
   } catch (error) {
     throw error;
   }
